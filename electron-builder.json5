@@ -17,7 +17,8 @@
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}_${version}.${ext}'
+    artifactName: '${productName}_${version}.${ext}',
+    requestedExecutionLevel: 'requireAdministrator'
   },
   nsis: {
     oneClick: false,

@@ -1,5 +1,5 @@
 import { app, BrowserWindow, shell, ipcMain, dialog, nativeTheme, Menu, net } from 'electron'
-import { release } from 'node:os'
+import { release, platform } from 'node:os'
 import { join } from 'node:path'
 import { config, save } from './storage'
 
@@ -135,6 +135,17 @@ app.on('activate', () => {
 ipcMain.handle('choose-wow-root-dir', async event => {
   const res = await dialog.showOpenDialog({
     properties: ['openDirectory']
+  })
+  if (!res.canceled && res.filePaths.length) {
+    const file = res.filePaths[0]
+    return file
+  }
+})
+
+ipcMain.handle('choose-battlenet-root-dir', async event => {
+  const res = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'Battle.net', extensions: platform() === 'darwin' ? ['app'] : ['exe'] }]
   })
   if (!res.canceled && res.filePaths.length) {
     const file = res.filePaths[0]

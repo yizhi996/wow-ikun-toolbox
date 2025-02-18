@@ -1,7 +1,7 @@
 <template>
   <div class="select-none">
     <div class="p-5 flex flex-col">
-      <div class="flex flex-col mt-2">
+      <div class="flex flex-col mt-2 space-y-5">
         <h2 class="text-xl font-semibold">设置</h2>
 
         <div class="flex items-center">
@@ -12,6 +12,16 @@
             disabled
           ></ElInput>
           <AppButton class="ml-2.5" @click="chooseWoWRootDir">设置</AppButton>
+        </div>
+
+        <div class="flex items-center">
+          <div>战网路径：</div>
+          <ElInput
+            style="width: 400px"
+            :model-value="store.battleNetDir ? store.battleNetDir : '请设置战网所在路径'"
+            disabled
+          ></ElInput>
+          <AppButton class="ml-2.5" @click="chooseBattleNetDir">设置</AppButton>
         </div>
       </div>
     </div>
@@ -29,6 +39,7 @@ import { resolve, basename } from 'node:path'
 import AppButton from '~/components/AppButton.vue'
 import { loadFlavors } from '~/core/wtf'
 import { useEventBus } from '@vueuse/core'
+import { BATTLE_NET_APP_NAME } from '~/core/account'
 
 const store = useStore()
 
@@ -49,6 +60,17 @@ const chooseWoWRootDir = async () => {
     }
     store.wowRootDir = dir
     bus.emit(dir)
+  }
+}
+
+const chooseBattleNetDir = async () => {
+  let dir = (await ipcRenderer.invoke('choose-battlenet-root-dir')) as string | undefined
+  if (dir) {
+    if (!basename(dir).includes(BATTLE_NET_APP_NAME)) {
+      showErrorMessage('不是正确的战网客户端目录')
+      return
+    }
+    store.battleNetDir = dir
   }
 }
 </script>

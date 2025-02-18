@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from 'vue'
+import { Ref, ref, toRaw, watch } from 'vue'
 import { getStorage, setStorage } from '~/utils/storage'
 
 export function useAppStorage<T>(key: string, initialValue: T) {
@@ -6,11 +6,15 @@ export function useAppStorage<T>(key: string, initialValue: T) {
 
   const isActive = ref(false)
 
-  watch(data, newValue => {
-    if (isActive.value) {
-      setStorage(key, newValue)
-    }
-  })
+  watch(
+    data,
+    newValue => {
+      if (isActive.value) {
+        setStorage(key, toRaw(newValue))
+      }
+    },
+    { deep: true }
+  )
   ;(async function () {
     isActive.value = false
     const value = await getStorage(key)

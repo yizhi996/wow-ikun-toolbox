@@ -6,6 +6,7 @@ import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { resolve, dirname, join } from 'node:path'
 import { Flavor } from '~/core/wtf'
+import { BattleNetSaved } from '~/core/account'
 
 export const useStore = defineStore('main', () => {
   const router = useRouter()
@@ -19,9 +20,12 @@ export const useStore = defineStore('main', () => {
   })
 
   const wowRootDir = useAppStorage('wowRootDir', '')
+  const battleNetDir = useAppStorage('battleNetDir', '')
 
   const selectedSourceFlavor = useAppStorage('selectedSourceFlavor', '')
   const selectedTargetFlavor = useAppStorage('selectedTargetFlavor', '')
+
+  const savedAccounts = useAppStorage<BattleNetSaved[]>('savedAccounts', [])
 
   const WTF_PATH = (flavor: Flavor | string) => {
     return resolve(wowRootDir.value, flavor, 'WTF')
@@ -52,8 +56,10 @@ export const useStore = defineStore('main', () => {
   return {
     appInfo,
     wowRootDir,
+    battleNetDir,
     selectedSourceFlavor,
     selectedTargetFlavor,
+    savedAccounts,
     WTF_PATH,
     ACCOUNT_PATH,
     checkWoWExists,
