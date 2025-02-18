@@ -128,6 +128,8 @@ declare module 'vue' {
     ToolVanillaFixes: typeof import('./src/components/Patch/ToolVanillaFixes.vue')['default']
     ToolWTF: typeof import('./src/components/Patch/ToolWTF.vue')['default']
     WTFCopyDialog: typeof import('./src/components/Patch/WTFCopyDialog.vue')['default']
+    WTFForm: typeof import('./src/components/WTF/WTFForm.vue')['default']
+    WTFList: typeof import('./src/components/WTF/WTFList.vue')['default']
     WTFManagerDialog: typeof import('./src/components/Patch/WTFManagerDialog.vue')['default']
   }
   export interface ComponentCustomProperties {

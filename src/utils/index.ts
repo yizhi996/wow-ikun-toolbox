@@ -9,6 +9,11 @@ dayjs.extend(relativeTime)
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>
 
+export interface SelectOption {
+  label: string
+  value: string
+}
+
 export const toFixed = (n: number, fractionDigits: number = 1) => {
   return Number.isInteger(n) ? n : parseFloat(n.toFixed(fractionDigits))
 }

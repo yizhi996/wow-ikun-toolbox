@@ -15,10 +15,14 @@
 import AppHeader from '../components/Layout/AppHeader.vue'
 import AppMain from '../components/Layout/AppMain.vue'
 import AppNavigation from '../components/AppNavigation.vue'
-import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const menus = ref([
-  { value: '/wtf', label: '配置管理' },
-  { value: '/settings', label: '设置' }
-])
+const router = useRouter()
+
+const menus = router
+  .getRoutes()
+  .filter(route => route.name)
+  .map(route => {
+    return { value: route.path, label: route.name as string }
+  })
 </script>
