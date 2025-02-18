@@ -1,0 +1,22 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html.dark {
+  --el-color-primary: #f57f1a !important;
+  --el-color-primary-light-3: #e66410 !important;
+  --el-color-primary-light-5: #bf4b0f !important;
+  --el-color-primary-light-7: #213d5b;
+  --el-color-primary-light-8: #1d3043;
+  --el-color-primary-light-9: #18222c;
+  --el-color-primary-dark-2: #f89d41 !important;
+}

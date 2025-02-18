@@ -1,0 +1,29 @@
+/**
+ * @see https://www.electron.build/configuration/configuration
+ */
+{
+  $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
+  appId: 'top.plashspeed.wow',
+  asar: true,
+  directories: {
+    output: 'release/latest',
+    buildResources: 'public'
+  },
+  files: ['dist-electron'],
+  win: {
+    target: [
+      {
+        target: 'nsis',
+        arch: ['x64']
+      }
+    ],
+    artifactName: '${productName}_${version}.${ext}'
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+    shortcutName: '魔兽世界奥金工具箱'
+  }
+}
