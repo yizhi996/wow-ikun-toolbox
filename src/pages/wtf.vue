@@ -1,8 +1,9 @@
 <template>
   <div class="flex h-full select-none">
     <div class="w-full flex flex-col items-center bg-brown-900">
-      <div class="w-full px-5 py-2">
+      <div class="w-full px-5 py-2 flex items-center space-x-10">
         <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
+        <AppButton type="success" :icon="RefreshRight" @click="bus.emit()">刷新</AppButton>
       </div>
       <div class="w-full h-full flex items-center justify-center bg-brown-950">
         <div class="flex h-full space-x-5 mt-3">
@@ -46,6 +47,7 @@ import AppButton from '~/components/AppButton.vue'
 import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { useEventBus } from '@vueuse/core'
 import WTFForm from '~/components/WTF/WTFForm.vue'
+import { RefreshRight } from '@element-plus/icons-vue'
 
 const store = useStore()
 

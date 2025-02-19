@@ -41,10 +41,11 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import { ElInput, ElOption, ElSelect, ElTable, ElTableColumn } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Flavor, loadWTFCharacters, WTF } from '~/core/wtf'
 import { SelectOption } from '~/utils'
 import { useStore } from '~/store'
+import { useEventBus } from '@vueuse/core'
 
 const props = defineProps<{
   title: string
@@ -59,6 +60,8 @@ const emit = defineEmits<{
 }>()
 
 const store = useStore()
+
+const bus = useEventBus<string>('WOW_DIR_CHANGED')
 
 const characters = ref<WTF[]>([])
 
@@ -76,10 +79,12 @@ const filterCharacters = computed(() => {
 })
 
 onMounted(async () => {
-  if (props.flavor) {
-    const res = await loadWTFCharacters(props.flavor)
-    characters.value = res
-  }
+  loadCharacters()
+  bus.on(loadCharacters)
+})
+
+onUnmounted(() => {
+  bus.off(loadCharacters)
 })
 
 const onSelectChange = (val: WTF | undefined) => {
@@ -90,5 +95,14 @@ const onFlavorChange = async (val: string) => {
   emit('update:flavor', val)
   const res = await loadWTFCharacters(val)
   characters.value = res
+}
+
+const loadCharacters = async () => {
+  if (props.flavor) {
+    const res = await loadWTFCharacters(props.flavor)
+    characters.value = res
+  } else {
+    characters.value = []
+  }
 }
 </script>
