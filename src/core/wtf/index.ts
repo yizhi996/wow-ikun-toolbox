@@ -17,6 +17,7 @@ export interface WTF {
   flavor: Flavor | string
   classes: number
   classColor: string
+  logged: boolean
 }
 
 export const enum Flavor {
@@ -146,9 +147,8 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
             const s = await stat(resolve(dir, realm, name))
             if (s.isDirectory() && name !== FILENAME_SAVED_VARIABLES) {
               let classes = 0
-              classes = await getClassIndexFromYishier(
-                resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
-              )
+              const savedPath = resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
+              classes = await getClassIndexFromYishier(savedPath)
 
               if (!classes) {
                 if (!classesMap) {
@@ -171,7 +171,8 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
                 realm,
                 flavor,
                 classes,
-                classColor: WOW_CLASSES_COLORS[classes]
+                classColor: WOW_CLASSES_COLORS[classes],
+                logged: !classes ? existsSync(savedPath) : true
               })
             }
           }

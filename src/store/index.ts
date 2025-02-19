@@ -24,6 +24,7 @@ export const useStore = defineStore('main', () => {
 
   const selectedSourceFlavor = useAppStorage('selectedSourceFlavor', '')
   const selectedTargetFlavor = useAppStorage('selectedTargetFlavor', '')
+  const onlyShowLoggedCharacters = useAppStorage('onlyShowLoggedCharacters', false)
 
   const savedAccounts = useAppStorage<BattleNetSaved[]>('savedAccounts', [])
 
@@ -59,6 +60,7 @@ export const useStore = defineStore('main', () => {
     battleNetDir,
     selectedSourceFlavor,
     selectedTargetFlavor,
+    onlyShowLoggedCharacters,
     savedAccounts,
     WTF_PATH,
     ACCOUNT_PATH,

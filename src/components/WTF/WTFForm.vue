@@ -22,19 +22,15 @@
 
     <ElTable
       border
-      style="height: calc(100% - 148px)"
-      :data="
-        searchCharacterName
-          ? characters.filter(character => character.name.includes(searchCharacterName))
-          : characters
-      "
+      style="height: calc(100% - 168px)"
+      :data="filterCharacters"
       highlight-current-row
       @current-change="onSelectChange"
     >
-      <ElTableColumn property="name" label="角色" width="140" >
+      <ElTableColumn property="name" label="角色" width="140">
         <template #default="scope">
-          <span :style="{color: scope.row.classColor}">{{ scope.row.name }}</span>
-      </template>
+          <span :style="{ color: scope.row.classColor }">{{ scope.row.name }}</span>
+        </template>
       </ElTableColumn>
       <ElTableColumn property="realm" label="服务器" width="120" />
       <ElTableColumn property="account" label="子账号" width="150" />
@@ -45,9 +41,10 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import { ElInput, ElOption, ElSelect, ElTable, ElTableColumn } from 'element-plus'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Flavor, loadWTFCharacters, WTF } from '~/core/wtf'
 import { SelectOption } from '~/utils'
+import { useStore } from '~/store'
 
 const props = defineProps<{
   title: string
@@ -61,9 +58,22 @@ const emit = defineEmits<{
   'update:select': [value: WTF | undefined]
 }>()
 
+const store = useStore()
+
 const characters = ref<WTF[]>([])
 
 const searchCharacterName = ref('')
+
+const filterCharacters = computed(() => {
+  let res = characters.value
+  if (store.onlyShowLoggedCharacters) {
+    res = characters.value.filter(character => character.logged)
+  }
+  if (searchCharacterName.value) {
+    res = res.filter(character => character.name.includes(searchCharacterName.value))
+  }
+  return res
+})
 
 onMounted(async () => {
   if (props.flavor) {

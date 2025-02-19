@@ -1,9 +1,11 @@
 <template>
   <div class="flex h-full select-none">
     <div class="w-full flex flex-col items-center bg-brown-900">
-      <div class="w-full"></div>
+      <div class="w-full px-5 py-2">
+        <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
+      </div>
       <div class="w-full h-full flex items-center justify-center bg-brown-950">
-        <div class="flex h-full space-x-5">
+        <div class="flex h-full space-x-5 mt-3">
           <!-- 来源 -->
           <WTFForm
             v-model:flavor="store.selectedSourceFlavor"
@@ -36,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox } from 'element-plus'
+import { ElCheckbox, ElMessageBox } from 'element-plus'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadFlavors, flavorToSelector, overwriteCharacterConfig, WTF } from '~/core/wtf'
 import { useStore } from '~/store'
