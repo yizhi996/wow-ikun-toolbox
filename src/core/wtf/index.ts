@@ -4,12 +4,19 @@ import { mkdir, stat } from 'node:fs/promises'
 import { readFile, writeFile } from 'node:fs/promises'
 import { useStore } from '~/store'
 import { fs_readdir } from '~/utils/fs'
+import {
+  getClassCharacterMapFromElvUI,
+  getClassCharacterMapFromNDui,
+  getClassIndexFromYishier
+} from './classes'
 
 export interface WTF {
   account: string
   realm: string
   name: string
   flavor: Flavor | string
+  classes: number
+  classColor: string
 }
 
 export const enum Flavor {
@@ -27,6 +34,55 @@ const FLAVOR_NAMES = {
 }
 
 const FILENAME_SAVED_VARIABLES = 'SavedVariables'
+
+// None = 0
+// Warrior = 1
+// Paladin = 2
+// Hunter = 3
+// Rogue = 4
+// Priest = 5
+// DeathKnight = 6
+// Shaman = 7
+// Mage = 8
+// Warlock = 9
+// Monk = 10
+// Druid = 11
+// Demon Hunter = 12
+// Evoker = 13
+
+const WOW_CLASSES_NAME_INDEX: Record<string, number> = {
+  '': 0,
+  WARRIOR: 1,
+  PALADIN: 2,
+  HUNTER: 3,
+  ROGUE: 4,
+  PRIEST: 5,
+  DEATHKNIGHT: 6,
+  SHAMAN: 7,
+  MAGE: 8,
+  WARLOCK: 9,
+  MONK: 10,
+  DRUID: 11,
+  DEMONHUNTER: 12,
+  EVOKER: 13
+}
+
+const WOW_CLASSES_COLORS = [
+  'var(--el-table-text-color)',
+  '#C69B6D',
+  '#F48CBA',
+  '#AAD372',
+  '#FFF468',
+  '#FFFFFF',
+  '#C41E3A',
+  '#0070DD',
+  '#3FC7EB',
+  '#8788EE',
+  '#00FF98',
+  '#FF7C0A',
+  '#A330C9',
+  '#33937F'
+]
 
 export const loadFlavors = async (root?: string) => {
   const store = useStore()
@@ -78,6 +134,8 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
     const dir = resolve(root, account)
     const s = await stat(dir)
     if (s.isDirectory()) {
+      let classesMap: Record<string, Record<string, string>> | undefined = undefined
+
       const realms = await fs_readdir(dir)
       for await (const realm of realms) {
         const absolute = resolve(dir, realm)
@@ -87,7 +145,34 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
           for await (const name of names) {
             const s = await stat(resolve(dir, realm, name))
             if (s.isDirectory() && name !== FILENAME_SAVED_VARIABLES) {
-              result.push({ account, name, realm, flavor })
+              let classes = 0
+              classes = await getClassIndexFromYishier(
+                resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
+              )
+
+              if (!classes) {
+                if (!classesMap) {
+                  classesMap =
+                    (await getClassCharacterMapFromElvUI(dir)) ||
+                    (await getClassCharacterMapFromNDui(dir))
+                  if (!classesMap) {
+                    classesMap = {}
+                  }
+                }
+
+                if (classesMap[realm] && classesMap[realm][name]) {
+                  classes = WOW_CLASSES_NAME_INDEX[classesMap[realm][name]] || 0
+                }
+              }
+
+              result.push({
+                account,
+                name,
+                realm,
+                flavor,
+                classes,
+                classColor: WOW_CLASSES_COLORS[classes]
+              })
             }
           }
         }

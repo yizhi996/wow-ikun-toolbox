@@ -31,7 +31,11 @@
       highlight-current-row
       @current-change="onSelectChange"
     >
-      <ElTableColumn property="name" label="角色" width="140" />
+      <ElTableColumn property="name" label="角色" width="140" >
+        <template #default="scope">
+          <span :style="{color: scope.row.classColor}">{{ scope.row.name }}</span>
+      </template>
+      </ElTableColumn>
       <ElTableColumn property="realm" label="服务器" width="120" />
       <ElTableColumn property="account" label="子账号" width="150" />
     </ElTable>
