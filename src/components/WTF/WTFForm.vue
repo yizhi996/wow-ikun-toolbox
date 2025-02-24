@@ -73,7 +73,8 @@ const filterCharacters = computed(() => {
     res = characters.value.filter(character => character.logged)
   }
   if (searchCharacterName.value) {
-    res = res.filter(character => character.name.includes(searchCharacterName.value))
+    const lowerCaseName = searchCharacterName.value.toLowerCase()
+    res = res.filter(character => character.name.toLowerCase().includes(lowerCaseName))
   }
   return res
 })
