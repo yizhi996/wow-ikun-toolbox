@@ -1,0 +1,7 @@
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import 'element-plus/es/components/message-box/style/css'
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/notification/style/css'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/option/style/css'
+import 'element-plus/es/components/dropdown/style/css'

@@ -25,6 +25,13 @@ export const useStore = defineStore('main', () => {
   const selectedSourceFlavor = useAppStorage('selectedSourceFlavor', '')
   const selectedTargetFlavor = useAppStorage('selectedTargetFlavor', '')
   const onlyShowLoggedCharacters = useAppStorage('onlyShowLoggedCharacters', false)
+  const overwriteWTFConfig = useAppStorage('overwriteWTFConfig', {
+    accountAddon: true,
+    accountSystem: true,
+    playerAddon: true,
+    playerSystem: true,
+    chat: true
+  })
 
   const savedAccounts = useAppStorage<BattleNetSaved[]>('savedAccounts', [])
 
@@ -61,6 +68,7 @@ export const useStore = defineStore('main', () => {
     selectedSourceFlavor,
     selectedTargetFlavor,
     onlyShowLoggedCharacters,
+    overwriteWTFConfig,
     savedAccounts,
     WTF_PATH,
     ACCOUNT_PATH,

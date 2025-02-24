@@ -3,6 +3,63 @@ import { resolve } from 'node:path'
 import { readFile } from 'node:fs/promises'
 import { parseLua } from '~/utils/lua'
 
+// None = 0
+// Warrior = 1
+// Paladin = 2
+// Hunter = 3
+// Rogue = 4
+// Priest = 5
+// DeathKnight = 6
+// Shaman = 7
+// Mage = 8
+// Warlock = 9
+// Monk = 10
+// Druid = 11
+// Demon Hunter = 12
+// Evoker = 13
+
+const WOW_CLASSES_NAME_INDEX: Record<string, number> = {
+  '': 0,
+  WARRIOR: 1,
+  PALADIN: 2,
+  HUNTER: 3,
+  ROGUE: 4,
+  PRIEST: 5,
+  DEATHKNIGHT: 6,
+  SHAMAN: 7,
+  MAGE: 8,
+  WARLOCK: 9,
+  MONK: 10,
+  DRUID: 11,
+  DEMONHUNTER: 12,
+  EVOKER: 13
+}
+
+const WOW_CLASSES_COLORS = [
+  'var(--el-table-text-color)',
+  '#C69B6D',
+  '#F48CBA',
+  '#AAD372',
+  '#FFF468',
+  '#FFFFFF',
+  '#C41E3A',
+  '#0070DD',
+  '#3FC7EB',
+  '#8788EE',
+  '#00FF98',
+  '#FF7C0A',
+  '#A330C9',
+  '#33937F'
+]
+
+export const classNameToIndex = (className: string) => {
+  return WOW_CLASSES_NAME_INDEX[className] || 0
+}
+
+export const classColorFromIndex = (index: number) => {
+  return WOW_CLASSES_COLORS[index] || WOW_CLASSES_COLORS[0]
+}
+
 export const getClassCharacterMapFromElvUI = async (dir: string) => {
   let classesMap: Record<string, Record<string, string>> | undefined = undefined
   const luaPath = resolve(dir, 'ElvUI.lua')

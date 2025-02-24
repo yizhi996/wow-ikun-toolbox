@@ -3,7 +3,39 @@
     <div class="w-full flex flex-col items-center bg-brown-900">
       <div class="w-full px-5 py-2 flex items-center space-x-10">
         <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
-        <AppButton type="success" :icon="RefreshRight" @click="bus.emit()">刷新</AppButton>
+
+        <ElDropdown placement="bottom" :hide-on-click="false">
+          <AppButton type="primary" :icon="Setting"> 覆盖设置 </AppButton>
+          <template #dropdown>
+            <ElDropdownMenu>
+              <ElDropdownItem>
+                <ElCheckbox v-model="store.overwriteWTFConfig.accountAddon"
+                  >账号插件配置</ElCheckbox
+                >
+              </ElDropdownItem>
+              <ElDropdownItem
+                ><ElCheckbox v-model="store.overwriteWTFConfig.accountSystem"
+                  >账号系统设置</ElCheckbox
+                ></ElDropdownItem
+              >
+              <ElDropdownItem divided>
+                <ElCheckbox v-model="store.overwriteWTFConfig.playerAddon">角色插件配置</ElCheckbox>
+              </ElDropdownItem>
+              <ElDropdownItem>
+                <ElCheckbox v-model="store.overwriteWTFConfig.playerSystem"
+                  >角色系统设置</ElCheckbox
+                >
+              </ElDropdownItem>
+              <ElDropdownItem>
+                <ElCheckbox v-model="store.overwriteWTFConfig.chat">聊天窗口设置</ElCheckbox>
+              </ElDropdownItem>
+            </ElDropdownMenu>
+          </template>
+        </ElDropdown>
+
+        <AppButton class="ml-5" type="success" :icon="RefreshRight" @click="bus.emit()"
+          >刷新</AppButton
+        >
       </div>
       <div class="w-full h-full flex items-center justify-center bg-brown-950">
         <div class="flex h-full space-x-5 mt-3">
@@ -39,7 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { ElCheckbox, ElMessageBox } from 'element-plus'
+import {
+  ElCheckbox,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElMessageBox,
+  ElOption
+} from 'element-plus'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadFlavors, flavorToSelector, overwriteCharacterConfig, WTF } from '~/core/wtf'
 import { useStore } from '~/store'
@@ -47,7 +86,7 @@ import AppButton from '~/components/AppButton.vue'
 import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { useEventBus } from '@vueuse/core'
 import WTFForm from '~/components/WTF/WTFForm.vue'
-import { RefreshRight } from '@element-plus/icons-vue'
+import { RefreshRight, Setting } from '@element-plus/icons-vue'
 
 const store = useStore()
 

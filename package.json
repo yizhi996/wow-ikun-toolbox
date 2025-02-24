@@ -21,7 +21,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
   },
   "devDependencies": {
     "@types/luaparse": "^0.2.12",
