@@ -50,6 +50,13 @@ export const useStore = defineStore('main', () => {
     return existsSync(wowRootDir.value)
   }
 
+  const checkBattleNetExists = () => {
+    if (!battleNetDir.value) {
+      return false
+    }
+    return existsSync(battleNetDir.value)
+  }
+
   const showWowDirSetAlert = () => {
     ElMessageBox.alert('请设置魔兽世界所在目录', '设置', {
       confirmButtonText: '前往',
@@ -73,6 +80,7 @@ export const useStore = defineStore('main', () => {
     WTF_PATH,
     ACCOUNT_PATH,
     checkWoWExists,
+    checkBattleNetExists,
     showWowDirSetAlert
   }
 })

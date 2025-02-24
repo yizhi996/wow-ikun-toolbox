@@ -9,15 +9,5 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import Layout from './layout/Layout.vue'
-import { useStore } from './store'
-
-const store = useStore()
-
-onMounted(() => {
-  if (!store.checkWoWExists()) {
-    store.showWowDirSetAlert()
-  }
-})
 </script>

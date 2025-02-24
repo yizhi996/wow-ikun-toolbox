@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full select-none">
-    <div class="w-full flex flex-col items-center bg-brown-900">
+    <div v-if="store.wowRootDir" class="w-full flex flex-col items-center bg-brown-900">
       <div class="w-full px-5 py-2 flex items-center space-x-10">
         <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
 
@@ -67,18 +67,16 @@
         </div>
       </div>
     </div>
+    <div v-else class="w-full flex items-center justify-center h-full">
+      <RouterLink to="/settings">
+        <AppButton type="primary">设置魔兽世界路径</AppButton>
+      </RouterLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  ElCheckbox,
-  ElDropdown,
-  ElDropdownItem,
-  ElDropdownMenu,
-  ElMessageBox,
-  ElOption
-} from 'element-plus'
+import { ElCheckbox, ElDropdown, ElDropdownItem, ElDropdownMenu, ElMessageBox } from 'element-plus'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadFlavors, flavorToSelector, overwriteCharacterConfig, WTF } from '~/core/wtf'
 import { useStore } from '~/store'
@@ -87,6 +85,7 @@ import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { useEventBus } from '@vueuse/core'
 import WTFForm from '~/components/WTF/WTFForm.vue'
 import { RefreshRight, Setting } from '@element-plus/icons-vue'
+import { RouterLink } from 'vue-router'
 
 const store = useStore()
 
@@ -98,7 +97,9 @@ const target = ref<WTF>()
 const flavors = ref<{ label: string; value: string }[]>([])
 
 onMounted(() => {
-  load()
+  if (store.checkWoWExists()) {
+    load()
+  }
   bus.on(load)
 })
 
@@ -144,11 +145,14 @@ const onOverwrite = () => {
     }
   )
     .then(async () => {
+      if (!store.checkWoWExists()) {
+        showErrorMessage('请先设置魔兽世界路径')
+        return
+      }
       try {
         await overwriteCharacterConfig(source.value!, target.value!)
         showSuccessMessage('覆盖成功')
       } catch (e) {
-        console.log(e)
         showErrorMessage('覆盖失败')
       }
     })

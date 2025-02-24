@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full select-none">
-    <div class="w-full flex flex-col items-center bg-brown-900">
+    <div v-if="store.battleNetDir" class="w-full flex flex-col items-center bg-brown-900">
       <div class="w-full"></div>
       <div class="w-full h-full flex items-center justify-center bg-brown-950">
         <div class="w-full h-full px-5">
@@ -22,6 +22,11 @@
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="w-full flex items-center justify-center h-full">
+      <RouterLink to="/settings">
+        <AppButton type="primary">设置战网路径</AppButton>
+      </RouterLink>
     </div>
   </div>
 
@@ -54,9 +59,9 @@ import {
   loadBattleNetSaved,
   writeBattleNetSaved
 } from '~/core/account'
-import { showWarningMessage } from '~/utils/message'
+import { showErrorMessage, showWarningMessage } from '~/utils/message'
 import { ElDialog, ElForm, ElFormItem, ElInput, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import AppButton from '~/components/AppButton.vue'
 
@@ -72,6 +77,11 @@ const saveAccountDialogForm = reactive({
 let tempSaved: BattleNetSaved | undefined
 
 const onShowSaveAccountDialog = async () => {
+  if (!store.checkBattleNetExists()) {
+    showErrorMessage('请先设置战网路径')
+    return
+  }
+
   const saved = await loadBattleNetSaved()
   if (!saved.SavedAccountNames) {
     showWarningMessage('请先登录一个账号')
@@ -129,6 +139,10 @@ const executeWhenBattleNetNotRunning = async (fn: () => Promise<void>) => {
 }
 
 const onOpenBattleNet = async () => {
+  if (!store.checkBattleNetExists()) {
+    showErrorMessage('请先设置战网路径')
+    return
+  }
   executeWhenBattleNetNotRunning(async () => {
     await clearBattleNetSavedAccount()
     await shell.openPath(store.battleNetDir)
@@ -136,6 +150,10 @@ const onOpenBattleNet = async () => {
 }
 
 const onLogin = async (saved: BattleNetSaved) => {
+  if (!store.checkBattleNetExists()) {
+    showErrorMessage('请先设置战网路径')
+    return
+  }
   executeWhenBattleNetNotRunning(async () => {
     await writeBattleNetSaved(saved)
     await shell.openPath(store.battleNetDir)
