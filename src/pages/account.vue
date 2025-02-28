@@ -1,9 +1,8 @@
 <template>
-  <div class="flex h-full select-none">
-    <div v-if="store.battleNetDir" class="w-full flex flex-col items-center bg-brown-900">
-      <div class="w-full"></div>
-      <div class="w-full h-full flex items-center justify-center bg-brown-950">
-        <div class="w-full h-full px-5">
+  <div class="p-5 flex h-full select-none">
+    <div v-if="store.battleNetDir" class="w-full flex flex-col items-center">
+      <div class="w-full h-full flex items-center justify-center">
+        <div class="w-full h-full">
           <AppButton size="large" type="success" @click="onOpenBattleNet">登录新账号</AppButton>
           <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
             >保持当前账号</AppButton
@@ -71,6 +70,7 @@ import { reactive, ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import AppButton from '~/components/AppButton.vue'
 import { Delete, Edit } from '@element-plus/icons-vue'
+import { checkBattleNetExists } from '~/utils/path'
 
 const store = useStore()
 
@@ -84,7 +84,7 @@ const saveAccountDialogForm = reactive({
 let tempSaved: BattleNetSaved | undefined
 
 const onShowSaveAccountDialog = async () => {
-  if (!store.checkBattleNetExists()) {
+  if (!checkBattleNetExists()) {
     showErrorMessage('请先设置战网路径')
     return
   }
@@ -146,7 +146,7 @@ const executeWhenBattleNetNotRunning = async (fn: () => Promise<void>) => {
 }
 
 const onOpenBattleNet = async () => {
-  if (!store.checkBattleNetExists()) {
+  if (!checkBattleNetExists()) {
     showErrorMessage('请先设置战网路径')
     return
   }
@@ -157,7 +157,7 @@ const onOpenBattleNet = async () => {
 }
 
 const onLogin = async (saved: BattleNetSaved) => {
-  if (!store.checkBattleNetExists()) {
+  if (!checkBattleNetExists()) {
     showErrorMessage('请先设置战网路径')
     return
   }

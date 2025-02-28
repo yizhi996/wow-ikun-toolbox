@@ -1,29 +1,37 @@
 <template>
-  <div class="select-none">
-    <div class="p-5 flex flex-col">
-      <div class="flex flex-col mt-2 space-y-5">
-        <h2 class="text-xl font-semibold">设置</h2>
+  <div class="p-5 flex flex-col space-y-5 h-full">
+    <div class="flex flex-col">
+      <span class="text-xl font-semibold">路径</span>
 
-        <ElForm label-position="left" label-width="auto">
-          <ElFormItem label="魔兽世界路径">
-            <ElInput
-              style="width: 400px"
-              :model-value="store.wowRootDir ? store.wowRootDir : '请设置魔兽世界所在路径'"
-              disabled
-            ></ElInput>
-            <AppButton class="ml-5" @click="chooseWoWRootDir">设置</AppButton></ElFormItem
-          >
+      <ElForm class="mt-2" label-position="left" label-width="96">
+        <ElFormItem label="魔兽世界">
+          <ElInput
+            style="width: 400px"
+            :model-value="store.wowRootDir ? store.wowRootDir : '请设置魔兽世界所在路径'"
+            disabled
+          ></ElInput>
+          <AppButton class="ml-5" @click="chooseWoWRootDir">设置</AppButton></ElFormItem
+        >
 
-          <ElFormItem label="战网路径">
-            <ElInput
-              style="width: 400px"
-              :model-value="store.battleNetDir ? store.battleNetDir : '请设置战网所在路径'"
-              disabled
-            ></ElInput>
-            <AppButton class="ml-5" @click="chooseBattleNetDir">设置</AppButton></ElFormItem
-          >
-        </ElForm>
-      </div>
+        <ElFormItem label="战网">
+          <ElInput
+            style="width: 400px"
+            :model-value="store.battleNetDir ? store.battleNetDir : '请设置战网所在路径'"
+            disabled
+          ></ElInput>
+          <AppButton class="ml-5" @click="chooseBattleNetDir">设置</AppButton></ElFormItem
+        >
+      </ElForm>
+    </div>
+
+    <div class="flex flex-col">
+      <span class="text-xl font-semibold">关于</span>
+
+      <ElForm class="mt-2" label-position="left" label-width="96">
+        <ElFormItem label="版本">
+          <span>{{ store.appInfo.version }}</span>
+        </ElFormItem>
+      </ElForm>
     </div>
   </div>
 </template>

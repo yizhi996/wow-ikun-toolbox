@@ -11,6 +11,7 @@ import {
   getClassCharacterMapFromNDui,
   getClassIndexFromYishier
 } from './classes'
+import { checkWoWExists, getAccountPath } from '~/utils/path'
 
 export interface WTF {
   account: string
@@ -70,12 +71,11 @@ export const flavorToSelector = (flavor: Flavor) => {
 
 export const loadWTFCharacters = async (flavor: Flavor | string) => {
   const store = useStore()
-  if (!store.checkWoWExists()) {
+  if (!checkWoWExists()) {
     return []
   }
 
-  const root = store.ACCOUNT_PATH(flavor)
-
+  const root = getAccountPath(flavor)
   if (!existsSync(root)) {
     return []
   }
@@ -136,8 +136,8 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
 
 export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
   const store = useStore()
-  const sourceAccountPath = resolve(store.ACCOUNT_PATH(socure.flavor), socure.account)
-  const targetAccountPath = resolve(store.ACCOUNT_PATH(target.flavor), target.account)
+  const sourceAccountPath = resolve(getAccountPath(socure.flavor), socure.account)
+  const targetAccountPath = resolve(getAccountPath(target.flavor), target.account)
 
   const files: { source: string; target: string }[] = []
 

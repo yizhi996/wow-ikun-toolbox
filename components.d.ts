@@ -12,9 +12,10 @@ declare module 'vue' {
     AppMain: typeof import('./src/components/Layout/AppMain.vue')['default']
     AppNavigation: typeof import('./src/components/AppNavigation.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    Overwrite: typeof import('./src/components/WTF/Overwrite/Overwrite.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Segmented: typeof import('./src/components/Segmented.vue')['default']
-    WTFForm: typeof import('./src/components/WTF/WTFForm.vue')['default']
+    WTFForm: typeof import('./src/components/WTF/Overwrite/WTFForm.vue')['default']
   }
 }

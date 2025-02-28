@@ -2,7 +2,7 @@
   <div class="flex items-center space-x-3 select-none">
     <template v-for="(item, i) of options" :key="item.value">
       <span
-        class="cursor-pointer"
+        class="cursor-pointer text-sm font-semibold"
         :class="{ 'text-accent-500': modelValue === item.value }"
         @click="emit('update:modelValue', item.value)"
         >{{ item.label }}

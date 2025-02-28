@@ -1,8 +1,11 @@
 <template>
-  <div class="flex flex-col space-y-3">
+  <div class="flex flex-col space-y-3 h-full">
     <span class="flex items-center"
-      ><span class="text-lg">{{ title }}</span>
-      <span v-if="select" class="font-semibold">{{ select.name }} - {{ select.realm }}</span>
+      ><span>{{ title }}</span>
+      <span v-if="select" class="font-semibold"
+        ><span :style="{ color: select.classColor }">{{ select.name }}</span> -
+        {{ select.realm }}</span
+      >
     </span>
 
     <div class="flex space-x-2">
@@ -21,19 +24,19 @@
     </div>
 
     <ElTable
-      border
-      style="height: calc(100% - 168px)"
+      :border="true"
+      style="height: calc(100% - 96px)"
       :data="filterCharacters"
       highlight-current-row
       @current-change="onSelectChange"
     >
-      <ElTableColumn property="name" label="角色" width="140">
+      <ElTableColumn property="name" label="角色">
         <template #default="scope">
           <span :style="{ color: scope.row.classColor }">{{ scope.row.name }}</span>
         </template>
       </ElTableColumn>
-      <ElTableColumn property="realm" label="服务器" width="120" />
-      <ElTableColumn property="account" label="子账号" width="150" />
+      <ElTableColumn property="realm" label="服务器" />
+      <ElTableColumn property="account" label="子账号" />
     </ElTable>
   </div>
 </template>
