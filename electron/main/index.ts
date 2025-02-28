@@ -1,9 +1,14 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, nativeTheme, Menu, net } from 'electron'
-import { release, platform } from 'node:os'
+import {
+  app,
+  BrowserWindow,
+  shell,
+  nativeTheme,
+  Menu,
+} from 'electron'
+import { release } from 'node:os'
 import { join } from 'node:path'
 import { config, save } from './storage'
-
-const DOMAIN = ['https://plashspeed.top/', 'https://d4ok.com/']
+import './ipc'
 
 // The built directory structure
 //
@@ -42,11 +47,6 @@ let win: BrowserWindow | null = null
 const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
-
-let domain = config.domain || DOMAIN[0]
-if (!DOMAIN.includes(domain)) {
-  domain = DOMAIN[0]
-}
 
 async function createWindow() {
   if (process.platform === 'win32') {
@@ -98,10 +98,6 @@ async function createWindow() {
 }
 
 app.whenReady().then(() => {
-  app.configureHostResolver({
-    secureDnsMode: 'automatic',
-    secureDnsServers: ['https://doh.pub/dns-query']
-  })
   createWindow()
 })
 
@@ -130,43 +126,4 @@ app.on('activate', () => {
   } else {
     createWindow()
   }
-})
-
-ipcMain.handle('choose-wow-root-dir', async event => {
-  const res = await dialog.showOpenDialog({
-    properties: ['openDirectory']
-  })
-  if (!res.canceled && res.filePaths.length) {
-    const file = res.filePaths[0]
-    return file
-  }
-})
-
-ipcMain.handle('choose-battlenet-root-dir', async event => {
-  const res = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{ name: 'Battle.net', extensions: platform() === 'darwin' ? ['app'] : ['exe'] }]
-  })
-  if (!res.canceled && res.filePaths.length) {
-    const file = res.filePaths[0]
-    return file
-  }
-})
-
-ipcMain.handle('get-app-info', () => {
-  return {
-    paths: {
-      appData: app.getPath('appData'),
-      userData: app.getPath('userData')
-    },
-    version: app.getVersion()
-  }
-})
-
-ipcMain.on('open-dev-tools', event => {
-  event.sender.openDevTools()
-})
-
-ipcMain.on('reload-app', async event => {
-  win.reload()
 })

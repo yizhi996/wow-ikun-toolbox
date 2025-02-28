@@ -1,17 +1,18 @@
 import { ipcRenderer } from 'electron'
+import { IPCChannel } from '~shared'
 
 export function getStorage<T>(key: string) {
-  return ipcRenderer.invoke('app-storage-get', key) as Promise<T>
+  return ipcRenderer.invoke(IPCChannel.STORAGE_GET, key) as Promise<T>
 }
 
 export function setStorage(key: string, value: any) {
-  return ipcRenderer.invoke('app-storage-set', key, value)
+  return ipcRenderer.invoke(IPCChannel.STORAGE_SET, key, value)
 }
 
 export function removeStorage(key: string) {
-  return ipcRenderer.invoke('app-storage-remove', key)
+  return ipcRenderer.invoke(IPCChannel.STORAGE_REMOVE, key)
 }
 
 export function clearStorage() {
-  return ipcRenderer.invoke('app-storage-clear')
+  return ipcRenderer.invoke(IPCChannel.STORAGE_CLEAR)
 }

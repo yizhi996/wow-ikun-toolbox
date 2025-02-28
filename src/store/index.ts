@@ -39,6 +39,10 @@ export const useStore = defineStore('main', () => {
     return resolve(wowRootDir.value, flavor, 'WTF')
   }
 
+  const SCREENSHORT_PATH = (flavor: Flavor | string) => {
+    return resolve(wowRootDir.value, flavor, 'Screenshots')
+  }
+
   const ACCOUNT_PATH = (flavor: Flavor | string) => {
     return resolve(WTF_PATH(flavor), 'Account')
   }
@@ -78,6 +82,7 @@ export const useStore = defineStore('main', () => {
     overwriteWTFConfig,
     savedAccounts,
     WTF_PATH,
+    SCREENSHORT_PATH,
     ACCOUNT_PATH,
     checkWoWExists,
     checkBattleNetExists,

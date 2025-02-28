@@ -17,7 +17,13 @@
             >
               <div class="text-gray-400 text-sm">{{ saved.SavedAccountNames }}</div>
               <div class="font-semibold">{{ saved.remark }}</div>
-              <AppButton type="success" size="small" @click="onLogin(saved)">登录</AppButton>
+              <div class="flex justify-between mt-2">
+                <div class="flex">
+                  <AppButton type="success" size="small" @click="onLogin(saved)">登录</AppButton>
+                  <AppButton plain :icon="Edit" size="small" @click="onEdit(saved)"></AppButton>
+                </div>
+                <AppButton plain :icon="Delete" size="small" @click="onDelete(saved)"></AppButton>
+              </div>
             </div>
           </div>
         </div>
@@ -64,6 +70,7 @@ import { ElDialog, ElForm, ElFormItem, ElInput, ElMessageBox } from 'element-plu
 import { reactive, ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import AppButton from '~/components/AppButton.vue'
+import { Delete, Edit } from '@element-plus/icons-vue'
 
 const store = useStore()
 
@@ -158,5 +165,22 @@ const onLogin = async (saved: BattleNetSaved) => {
     await writeBattleNetSaved(saved)
     await shell.openPath(store.battleNetDir)
   })
+}
+
+const onEdit = (saved: BattleNetSaved) => {}
+
+const onDelete = (saved: BattleNetSaved) => {
+  ElMessageBox.confirm(`确定要删除 "${saved.SavedAccountNames}" 吗`, '操作确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      const i = store.savedAccounts.findIndex(e => e.SavedAccountNames === saved.SavedAccountNames)
+      if (i !== -1) {
+        store.savedAccounts.splice(i, 1)
+      }
+    })
+    .catch(() => {})
 }
 </script>

@@ -23,8 +23,6 @@
             <AppButton class="ml-5" @click="chooseBattleNetDir">设置</AppButton></ElFormItem
           >
         </ElForm>
-
-        <AppButton @click="onReset">Reset</AppButton>
       </div>
     </div>
   </div>
@@ -40,13 +38,14 @@ import { loadFlavors } from '~/core/wtf'
 import { useEventBus } from '@vueuse/core'
 import { BATTLE_NET_APP_NAME } from '~/core/account'
 import { ElForm, ElFormItem, ElInput } from 'element-plus'
+import { IPCChannel } from '~shared'
 
 const store = useStore()
 
 const bus = useEventBus<string>('WOW_DIR_CHANGED')
 
 const chooseWoWRootDir = async () => {
-  let dir = (await ipcRenderer.invoke('choose-wow-root-dir')) as string | undefined
+  let dir = (await ipcRenderer.invoke(IPCChannel.CHOOSE_WOW_DIR)) as string | undefined
   if (dir) {
     let flavors = await loadFlavors(dir)
     if (flavors.length === 0) {
@@ -64,7 +63,7 @@ const chooseWoWRootDir = async () => {
 }
 
 const chooseBattleNetDir = async () => {
-  let dir = (await ipcRenderer.invoke('choose-battlenet-root-dir')) as string | undefined
+  let dir = (await ipcRenderer.invoke(IPCChannel.CHOOSE_BATTLENET_DIR)) as string | undefined
   if (dir) {
     if (!basename(dir).includes(BATTLE_NET_APP_NAME)) {
       showErrorMessage('不是正确的战网客户端目录')
@@ -72,10 +71,5 @@ const chooseBattleNetDir = async () => {
     }
     store.battleNetDir = dir
   }
-}
-
-const onReset = () => {
-  store.wowRootDir = ''
-  store.battleNetDir = ''
 }
 </script>

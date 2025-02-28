@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import { IPCChannel } from '~shared'
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise(resolve => {
@@ -128,7 +129,7 @@ function useLoading() {
   oReload.textContent = '重新加载'
   oReload.style.cssText = `display:none; cursor: pointer; margin-top: 20px;color:white;font-size:14px;`
   oReload.onclick = () => {
-    ipcRenderer.send('reload-app')
+    ipcRenderer.send(IPCChannel.RELOAD_APP)
   }
   oDiv.appendChild(oReload)
 
@@ -197,7 +198,7 @@ document.addEventListener(
     if (pattern.length === current) {
       current = 0
 
-      ipcRenderer.send('open-dev-tools')
+      ipcRenderer.send(IPCChannel.OPEN_DEV_TOOLS)
     }
   },
   false

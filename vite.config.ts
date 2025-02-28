@@ -20,29 +20,8 @@ export default defineConfig(({ command, mode }) => {
   return {
     resolve: {
       alias: {
-        '~': resolve('./src')
-      }
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('assets/images/talent')) {
-              return 'talent'
-            }
-
-            if (id.includes('node_modules')) {
-              if (id.includes('wangeditor') && id.endsWith('.js')) {
-                return 'wangeditor'
-              }
-
-              if (id.includes('element-plus') && id.includes('css')) {
-                return
-              }
-              return 'vendor'
-            }
-          }
-        }
+        '~': resolve(__dirname, './src'),
+        '~shared': resolve(__dirname, './shared')
       }
     },
     plugins: [
@@ -59,6 +38,11 @@ export default defineConfig(({ command, mode }) => {
             }
           },
           vite: {
+            resolve: {
+              alias: {
+                '~shared': resolve(__dirname, './shared')
+              }
+            },
             build: {
               sourcemap,
               minify: isBuild,
@@ -77,6 +61,11 @@ export default defineConfig(({ command, mode }) => {
             options.reload()
           },
           vite: {
+            resolve: {
+              alias: {
+                '~shared': resolve(__dirname, './shared')
+              }
+            },
             build: {
               sourcemap: sourcemap ? 'inline' : undefined, // #332
               minify: isBuild,

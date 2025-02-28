@@ -3,7 +3,7 @@ import { existsSync, PathLike } from 'node:fs'
 import { readdir, stat } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { showWarningMessage } from './message'
-import { isMacOS } from '.'
+import { isMacOS } from '~shared'
 
 export const fs_readdir = (path: PathLike) => {
   if (isMacOS()) {

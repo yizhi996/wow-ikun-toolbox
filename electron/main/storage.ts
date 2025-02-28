@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron'
 import { join } from 'node:path'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { IPCChannel } from '~shared'
 
 interface AppConfig {
   [x: string]: any
@@ -25,21 +26,21 @@ export function save() {
   writeFileSync(configPath, JSON.stringify(config))
 }
 
-ipcMain.handle('app-storage-get', (event, key) => {
+ipcMain.handle(IPCChannel.STORAGE_GET, (event, key) => {
   return config[key]
 })
 
-ipcMain.handle('app-storage-set', (event, key, value) => {
+ipcMain.handle(IPCChannel.STORAGE_SET, (event, key, value) => {
   config[key] = value
   save()
 })
 
-ipcMain.handle('app-storage-remove', (event, key) => {
+ipcMain.handle(IPCChannel.STORAGE_REMOVE, (event, key) => {
   delete config[key]
   save()
 })
 
-ipcMain.handle('app-storage-clear', event => {
+ipcMain.handle(IPCChannel.STORAGE_CLEAR, event => {
   config = { bounds: { x: 0, y: 0, width: 1024, height: 768 } }
   save()
 })

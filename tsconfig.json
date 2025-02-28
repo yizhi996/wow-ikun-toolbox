@@ -14,9 +14,10 @@
     "noEmit": true,
     "types": ["element-plus/global"],
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~shared": ["./shared"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "shared"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

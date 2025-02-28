@@ -38,5 +38,3 @@ export const isString = (val: unknown): val is string => typeof val === 'string'
 export const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
 
 export const isArray = Array.isArray
-
-export const isMacOS = () => os.platform() === 'darwin'

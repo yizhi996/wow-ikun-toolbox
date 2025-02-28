@@ -1,0 +1,16 @@
+export const enum IPCChannel {
+  GET_APP_INFO = 'GET_APP_INFO',
+  OPEN_DEV_TOOLS = 'OPEN_DEV_TOOLS',
+  RELOAD_APP = 'RELOAD_APP',
+
+  STORAGE_GET = 'STORAGE_GET',
+  STORAGE_SET = 'STORAGE_SET',
+  STORAGE_REMOVE = 'STORAGE_REMOVE',
+  STORAGE_CLEAR = 'STORAGE_CLEAR',
+
+  CHOOSE_WOW_DIR = 'CHOOSE_WOW_DIR',
+  CHOOSE_BATTLENET_DIR = 'CHOOSE_BATTLENET_DIR',
+
+}
+
+export const isMacOS = () => process.platform === 'darwin'
