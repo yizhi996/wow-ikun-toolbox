@@ -57,3 +57,10 @@ export const setWTFConfig = async (flavor: Flavor | string, key: string, value?:
   }
   return writeFile(configFilePath, lines.join('\n'))
 }
+
+export const converWTFValueToBoolean = (value: string, def: boolean = true) => {
+  if (value === undefined) {
+    return def
+  }
+  return value === '1'
+}

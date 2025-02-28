@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col items-center">
-    <div class="w-full flex space-x-10 items-center px-5 py-2 bg-brown-900">
-      <div class="w-full flex space-x-10 items-center">
+    <div class="w-full flex items-center justify-between px-5 py-2 bg-brown-900">
+      <div class="flex space-x-10 items-center">
         <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
 
         <ElDropdown placement="bottom" :hide-on-click="false">

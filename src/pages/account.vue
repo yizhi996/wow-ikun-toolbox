@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5 flex h-full select-none">
+  <div class="p-5 flex h-full">
     <div v-if="store.battleNetDir" class="w-full flex flex-col items-center">
       <div class="w-full h-full flex items-center justify-center">
         <div class="w-full h-full">

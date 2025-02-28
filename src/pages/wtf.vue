@@ -7,6 +7,7 @@
         <Segmented class="h-10" v-model="currentSegment" :options="segments"></Segmented>
       </div>
       <Overwrite v-show="currentSegment === 'overwrite'" class="h-[calc(100%-57px)]"></Overwrite>
+      <Synchronize v-show="currentSegment === 'synchronize'"></Synchronize>
     </div>
     <div v-else class="w-full flex items-center justify-center h-full">
       <RouterLink to="/settings">
@@ -23,6 +24,7 @@ import AppButton from '~/components/AppButton.vue'
 import { RouterLink } from 'vue-router'
 import Segmented from '~/components/Segmented.vue'
 import Overwrite from '~/components/WTF/Overwrite/Overwrite.vue'
+import Synchronize from '~/components/WTF/Synchronize/Synchronize.vue'
 
 const store = useStore()
 

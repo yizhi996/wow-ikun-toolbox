@@ -25,6 +25,7 @@ export const useStore = defineStore('main', () => {
     playerSystem: true,
     chat: true
   })
+  const selectedSynchronizeFlavor = useAppStorage('selectSynchronizeFlavor', '')
 
   const savedAccounts = useAppStorage<BattleNetSaved[]>('savedAccounts', [])
 
@@ -36,6 +37,7 @@ export const useStore = defineStore('main', () => {
     selectedTargetFlavor,
     onlyShowLoggedCharacters,
     overwriteWTFConfig,
+    selectedSynchronizeFlavor,
     savedAccounts
   }
 })
