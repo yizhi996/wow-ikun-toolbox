@@ -14,7 +14,7 @@
               :key="saved.SavedAccountNames"
               class="border rounded-sm w-64 p-3"
             >
-              <div class="text-gray-400 text-sm">{{ saved.SavedAccountNames }}</div>
+              <div class="text-white/80 text-sm">{{ saved.SavedAccountNames }}</div>
               <div class="font-semibold">{{ saved.remark }}</div>
               <div class="flex justify-between mt-2">
                 <div class="flex">

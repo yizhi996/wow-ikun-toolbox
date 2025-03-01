@@ -6,10 +6,18 @@
   appId: 'top.plashspeed.wow',
   asar: true,
   directories: {
-    output: 'release/latest',
-    buildResources: 'public'
+    output: 'release/${version}'
   },
-  files: ['dist-electron'],
+  files: ['dist', 'dist-electron'],
+  afterPack: './scripts/afterPack.js',
+  mac: {
+    target: [{ target: 'dmg', arch: 'universal' }],
+    artifactName: '${productName}-Mac-${version}.${ext}',
+    executableName: '魔兽世界奥金工具箱'
+  },
+  dmg: {
+    title: '魔兽世界奥金工具箱'
+  },
   win: {
     target: [
       {
@@ -17,7 +25,7 @@
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}_${version}.${ext}',
+    artifactName: '${productName}-Windows-${version}.${ext}',
     requestedExecutionLevel: 'requireAdministrator'
   },
   nsis: {

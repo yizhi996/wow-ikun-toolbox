@@ -13,7 +13,7 @@
         <ElOption v-for="item in flavors" :key="item.value" :label="item.label" :value="item.value">
           <div class="flex items-center justify-between">
             <span>{{ item.label }}</span>
-            <span class="text-gray-400 text-xs">
+            <span class="text-white/50 text-xs">
               {{ item.value }}
             </span>
           </div>

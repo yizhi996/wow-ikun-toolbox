@@ -5,6 +5,8 @@ import { config, save } from './storage'
 import './ipc'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
+import { isMacOS } from '~shared'
+import { setMenu } from './menu'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -40,19 +42,19 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
+app.name = '魔兽世界奥金工具箱'
+app.commandLine.appendSwitch('lang', 'zh-CN')
+
 let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
 async function createWindow() {
-  if (process.platform === 'win32') {
-    Menu.setApplicationMenu(null)
-  }
-
   nativeTheme.themeSource = 'dark'
+  setMenu()
 
   win = new BrowserWindow({
-    title: '魔兽世界奥金工具箱',
+    title: app.getName(),
     width: config.bounds.width,
     height: config.bounds.height,
     minWidth: 1024,
