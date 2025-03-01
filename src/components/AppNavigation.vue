@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col border-r-[1px] border-white border-opacity-20">
+  <div class="w-full h-full flex flex-col border-r-[1px] border-white/20">
     <div
       v-for="menu of menus"
       :key="menu.value"
@@ -32,7 +32,7 @@ const router = useRouter()
 
 const className = (menu: Menu) => {
   const cls = []
-  cls.push(route.path === menu.value ? 'text-accent-500 bg-brown-900' : 'text-gray-500 bg-none')
+  cls.push(route.path === menu.value ? 'text-accent-500 bg-brown-900' : 'text-white/80 bg-none')
   return cls.join(' ')
 }
 

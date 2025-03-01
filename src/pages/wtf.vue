@@ -2,7 +2,7 @@
   <div class="flex h-full">
     <div v-if="store.wowRootDir" class="w-full flex flex-col items-center">
       <div
-        class="w-full px-5 py-2 flex items-center space-x-10 border-b-[1px] border-white border-opacity-20"
+        class="w-full px-5 py-2 flex items-center space-x-10 border-b-[1px] border-white/20"
       >
         <Segmented class="h-10" v-model="currentSegment" :options="segments"></Segmented>
       </div>

@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full h-full relative overflow-hidden flex select-none">
+  <div
+    class="w-screen h-screen relative overflow-hidden flex select-none bg-brown-950 text-white/85"
+  >
     <div class="flex items-center w-24 f-full flex-shrink-0">
       <AppNavigation :menus="menus"></AppNavigation>
     </div>

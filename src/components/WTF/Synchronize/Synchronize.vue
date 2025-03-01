@@ -1,7 +1,11 @@
 <template>
   <div class="w-full h-full p-5 flex flex-col">
     <div>
-      <ElSelect v-model="store.selectedSynchronizeFlavor" @change="onFlavorChange">
+      <ElSelect
+        style="width: 180px"
+        v-model="store.selectedSynchronizeFlavor"
+        @change="onFlavorChange"
+      >
         <ElOption v-for="item in flavors" :key="item.value" :label="item.label" :value="item.value">
           <div class="flex items-center justify-between">
             <span>{{ item.label }}</span>

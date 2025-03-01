@@ -1,9 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer base {
-  .text-primary {
-    color: rgba(255, 255, 255, 0.85);
-  }
+@theme {
+  --color-accent-500: #f57f1a;
+
+  --color-brown-800: #3e3531;
+  --color-brown-900: #352f2c;
+  --color-brown-950: #181412;
 }
