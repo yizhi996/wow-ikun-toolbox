@@ -1,11 +1,10 @@
-import { app, BrowserWindow, shell, nativeTheme, Menu, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, nativeTheme, ipcMain } from 'electron'
 import os from 'node:os'
 import path from 'node:path'
 import { config, save } from './storage'
 import './ipc'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { isMacOS } from '~shared'
 import { setMenu } from './menu'
 
 const require = createRequire(import.meta.url)
@@ -66,10 +65,11 @@ async function createWindow() {
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
       contextIsolation: false
-    }
+    },
+    show: !!VITE_DEV_SERVER_URL
   })
 
-  win.on('close', () => {
+  win.once('close', () => {
     config.bounds = win.getBounds()
     save()
   })
@@ -80,6 +80,9 @@ async function createWindow() {
     // Open devTool if the app is not packaged
     win.webContents.openDevTools()
   } else {
+    win.once('ready-to-show', () => {
+      win?.show()
+    })
     win.loadFile(indexHtml)
   }
 
@@ -117,22 +120,5 @@ app.on('activate', () => {
     allWindows[0].focus()
   } else {
     createWindow()
-  }
-})
-
-// New window example arg: new windows url
-ipcMain.handle('open-win', (_, arg) => {
-  const childWindow = new BrowserWindow({
-    webPreferences: {
-      preload,
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  })
-
-  if (VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
-  } else {
-    childWindow.loadFile(indexHtml, { hash: arg })
   }
 })
