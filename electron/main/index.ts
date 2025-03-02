@@ -42,7 +42,7 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-app.name = '魔兽世界奥金工具箱'
+app.setName('魔兽世界奥金工具箱')
 app.commandLine.appendSwitch('lang', 'zh-CN')
 
 let win: BrowserWindow | null = null

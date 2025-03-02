@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/luaparse": "^0.2.12",
     "@vitejs/plugin-vue": "^5.2.1",
-    "electron": "^34.3.0",
+    "electron": "34.3.0",
     "electron-builder": "25.1.8",
     "typescript": "^5.0.2",
     "unplugin-auto-import": "^19.1.1",
@@ -44,5 +44,10 @@
     "tailwindcss": "^4.0.9",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "app-builder-lib@25.1.8": "patches/app-builder-lib@25.1.8.patch"
+    }
   }
 }

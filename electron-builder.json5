@@ -9,10 +9,9 @@
     output: 'release/${version}'
   },
   files: ['dist', 'dist-electron'],
-  afterPack: './scripts/afterPack.js',
   mac: {
     target: [{ target: 'dmg', arch: 'universal' }],
-    artifactName: '${productName}-Mac-${version}.${ext}',
+    artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
     executableName: '魔兽世界奥金工具箱'
   },
   dmg: {
@@ -25,7 +24,7 @@
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}-Windows-${version}.${ext}',
+    artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
     requestedExecutionLevel: 'requireAdministrator'
   },
   nsis: {
