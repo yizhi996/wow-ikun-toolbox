@@ -11,6 +11,7 @@ declare module 'vue' {
     AppButton: typeof import('./src/components/AppButton.vue')['default']
     AppNavigation: typeof import('./src/components/AppNavigation.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     Overwrite: typeof import('./src/components/WTF/Overwrite/Overwrite.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

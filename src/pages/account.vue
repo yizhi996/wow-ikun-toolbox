@@ -2,20 +2,39 @@
   <div class="p-5 flex h-full">
     <div v-if="store.battleNetDir" class="w-full flex flex-col items-center">
       <div class="w-full h-full flex items-center justify-center">
-        <div class="w-full h-full">
-          <AppButton size="large" type="success" @click="onOpenBattleNet">登录新账号</AppButton>
-          <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
-            >保持当前账号</AppButton
-          >
-
-          <div class="mt-5 grid grid-cols-3 gap-2 overflow-y-auto max-h-[calc(100%-56px)]">
-            <div
-              v-for="saved of store.savedAccounts"
-              :key="saved.SavedAccountNames"
-              class="border rounded-sm w-64 p-3"
+        <div class="w-full h-full flex flex-col">
+          <div class="flex items-center">
+            <AppButton size="large" type="success" @click="onOpenBattleNet">登录新账号</AppButton>
+            <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
+              >保持当前账号</AppButton
             >
-              <div class="text-white/80 text-sm">{{ saved.SavedAccountNames }}</div>
-              <div class="font-semibold">{{ saved.remark }}</div>
+          </div>
+          <ElInput
+            v-model="search"
+            class="mt-5"
+            style="width: 256px"
+            placeholder="搜索账号或备注"
+            :suffix-icon="Search"
+          ></ElInput>
+          <ElCheckbox v-model="store.secureAccount" class="mt-5">匿名显示账号</ElCheckbox>
+
+          <div
+            class="grid gap-3 overflow-y-auto max-h-[calc(100%-156px)]"
+            style="grid-template-columns: repeat(auto-fill, 280px)"
+          >
+            <div
+              v-for="saved of filterSavedAccounts"
+              :key="saved.SavedAccountNames"
+              class="border rounded-sm p-3"
+            >
+              <div class="text-white/80 text-sm">
+                {{
+                  store.secureAccount
+                    ? secureString(saved.SavedAccountNames)
+                    : saved.SavedAccountNames
+                }}
+              </div>
+              <div class="text-sm line-clamp-1">备注：{{ saved.remark }}</div>
               <div class="flex justify-between mt-2">
                 <div class="flex">
                   <AppButton type="success" size="small" @click="onLogin(saved)">登录</AppButton>
@@ -62,14 +81,15 @@ import {
   BattleNetSaved,
   clearBattleNetSavedAccount,
   loadBattleNetSaved,
+  secureString,
   writeBattleNetSaved
 } from '~/core/account'
 import { showErrorMessage, showWarningMessage } from '~/utils/message'
 import { ElDialog, ElForm, ElFormItem, ElInput, ElMessageBox } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import AppButton from '~/components/AppButton.vue'
-import { Delete, Edit } from '@element-plus/icons-vue'
+import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import { checkBattleNetExists } from '~/utils/path'
 
 const store = useStore()
@@ -81,7 +101,22 @@ const saveAccountDialogForm = reactive({
   remark: ''
 })
 
+const search = ref('')
+
 let tempSaved: BattleNetSaved | undefined
+let editSaved = false
+
+const filterSavedAccounts = computed(() => {
+  if (search.value) {
+    const lower = search.value.toLowerCase()
+    return store.savedAccounts.filter(
+      saved =>
+        saved.SavedAccountNames.toLowerCase().includes(lower) ||
+        (saved.remark && saved.remark.toLowerCase().includes(lower))
+    )
+  }
+  return store.savedAccounts
+})
 
 const onShowSaveAccountDialog = async () => {
   if (!checkBattleNetExists()) {
@@ -95,6 +130,7 @@ const onShowSaveAccountDialog = async () => {
     return
   }
   tempSaved = saved
+  editSaved = false
   saveAccountDialogForm.account = saved.SavedAccountNames
   const exists = store.savedAccounts.find(
     saved => saved.SavedAccountNames === tempSaved!.SavedAccountNames
@@ -109,17 +145,22 @@ const onSaveAccount = async () => {
   const i = store.savedAccounts.findIndex(
     saved => saved.SavedAccountNames === tempSaved!.SavedAccountNames
   )
-  if (i !== -1) {
-    store.savedAccounts.splice(i, 1)
+  if (!editSaved) {
+    if (i !== -1) {
+      store.savedAccounts.splice(i, 1)
+    }
+    store.savedAccounts.unshift({
+      SavedAccountNames: tempSaved!.SavedAccountNames,
+      LastLoginAddress: tempSaved!.LastLoginAddress,
+      LastLoginRegion: tempSaved!.LastLoginRegion,
+      LastLoginTassadar: tempSaved!.LastLoginTassadar,
+      remark: saveAccountDialogForm.remark
+    })
+  } else {
+    if (i !== -1) {
+      store.savedAccounts[i].remark = saveAccountDialogForm.remark
+    }
   }
-
-  store.savedAccounts.unshift({
-    SavedAccountNames: tempSaved!.SavedAccountNames,
-    LastLoginAddress: tempSaved!.LastLoginAddress,
-    LastLoginRegion: tempSaved!.LastLoginRegion,
-    LastLoginTassadar: tempSaved!.LastLoginTassadar,
-    remark: saveAccountDialogForm.remark
-  })
 }
 
 const executeWhenBattleNetNotRunning = async (fn: () => Promise<void>) => {
@@ -167,7 +208,13 @@ const onLogin = async (saved: BattleNetSaved) => {
   })
 }
 
-const onEdit = (saved: BattleNetSaved) => {}
+const onEdit = (saved: BattleNetSaved) => {
+  tempSaved = saved
+  editSaved = true
+  saveAccountDialogForm.account = saved.SavedAccountNames!
+  saveAccountDialogForm.remark = saved.remark || ''
+  saveAccountDialogVisible.value = true
+}
 
 const onDelete = (saved: BattleNetSaved) => {
   ElMessageBox.confirm(`确定要删除 "${saved.SavedAccountNames}" 吗`, '操作确认', {

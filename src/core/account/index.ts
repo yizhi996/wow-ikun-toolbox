@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs'
 export interface BattleNetSaved {
   remark: string | undefined
 
-  SavedAccountNames: string | undefined
+  SavedAccountNames: string
   LastLoginRegion: string | undefined
   LastLoginAddress: string | undefined
   LastLoginTassadar: string | undefined
@@ -36,7 +36,7 @@ export const clearBattleNetSavedAccount = async () => {
 
 export const loadBattleNetSaved = async () => {
   const config = await loadBattleNetConfig()
-  const SavedAccountNames = config.Client.SavedAccountNames as string | undefined
+  const SavedAccountNames = config.Client.SavedAccountNames || ''
   const LastLoginRegion = findObjectValue(config, 'LastLoginRegion')
   const LastLoginAddress = findObjectValue(config, 'LastLoginAddress')
   const LastLoginTassadar = findObjectValue(config, 'LastLoginTassadar')
@@ -93,4 +93,26 @@ function updateObjectValue(obj: any, key: string, newValue: any) {
   }
 
   return result
+}
+
+const ANONYMIZED_TEXT = '****'
+
+export function secureString(input: string): string {
+  if (input.includes('@')) {
+    const [local, domain] = input.split('@')
+    const anonymizedLocal = local[0] + ANONYMIZED_TEXT + local[local.length - 1]
+    return anonymizedLocal + '@' + domain
+  }
+
+  if (/^\d+$/.test(input)) {
+    return input[0] + ANONYMIZED_TEXT + input[input.length - 1]
+  }
+
+  if (/[a-zA-Z]/.test(input)) {
+    const firstChar = input[0]
+    const lastChar = input[input.length - 1]
+    return firstChar + ANONYMIZED_TEXT + lastChar
+  }
+
+  return input
 }

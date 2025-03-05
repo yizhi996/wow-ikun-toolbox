@@ -19,7 +19,7 @@ export const quitProcess = (name: string) => {
 
 export const checkProcessIsRunning = (name: string) => {
   const isWin = process.platform === 'win32'
-  const cmd = isWin ? `tasklist` : `ps aux`
+  const cmd = isWin ? `tasklist /fi "imagename eq ${name}" /fo csv` : `ps aux`
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
