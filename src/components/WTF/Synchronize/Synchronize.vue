@@ -18,13 +18,21 @@
     </div>
     <div class="flex flex-col mt-5">
       <ElCheckbox v-model="synchronize.synchronizeConfig" @change="onChangeConfig"
-        >同步设置参数</ElCheckbox
+        >同步设置参数
+        <span class="text-sm font-normal ml-5 text-white/70"
+          >如果你需要上别人的号，推荐关闭，否则会同步你的设置到他的账号上</span
+        ></ElCheckbox
       >
       <ElCheckbox v-model="synchronize.synchronizeBindings" @change="onChangeBindings"
-        >同步快捷键</ElCheckbox
+        >同步按键绑定<span class="text-sm font-normal ml-5 text-white/70">
+          多数情况下按键都是使用 Myslot 导入导出的，所以不需要关闭</span
+        ></ElCheckbox
       >
       <ElCheckbox v-model="synchronize.synchronizeChatFrames" @change="onChangeChatFrames"
-        >同步聊天窗口</ElCheckbox
+        >同步聊天窗口
+        <span class="text-sm font-normal ml-5 text-white/70"
+          >如果你需要上别人的号，推荐关闭，否则会同步你的设置到他的账号上</span
+        ></ElCheckbox
       >
     </div>
   </div>

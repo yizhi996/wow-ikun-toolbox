@@ -9,7 +9,7 @@
     </span>
 
     <div class="flex space-x-2">
-      <ElSelect style="width: 220px;" :model-value="flavor" @change="onFlavorChange">
+      <ElSelect style="width: 220px" :model-value="flavor" @change="onFlavorChange">
         <ElOption v-for="item in flavors" :key="item.value" :label="item.label" :value="item.value">
           <div class="flex items-center justify-between">
             <span>{{ item.label }}</span>

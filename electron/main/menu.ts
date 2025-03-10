@@ -23,62 +23,24 @@ export const setMenu = () => {
         submenu: [{ role: 'close' }]
       },
       {
-        label: 'View',
+        label: 'Edit',
         submenu: [
-          { role: 'resetZoom' },
-          { role: 'zoomIn' },
-          { role: 'zoomOut' },
+          { role: 'undo' },
+          { role: 'redo' },
           { type: 'separator' },
-          { role: 'togglefullscreen' }
-        ]
-      },
-      {
-        label: 'Window',
-        submenu: [
-          { role: 'minimize' },
-          { role: 'zoom' },
+          { role: 'cut' },
+          { role: 'copy' },
+          { role: 'paste' },
 
+          { role: 'pasteAndMatchStyle' },
+          { role: 'delete' },
+          { role: 'selectAll' },
           { type: 'separator' },
-          { role: 'front' },
-          { type: 'separator' },
-          { role: 'window' }
-        ]
-      },
-      {
-        role: 'help',
-        submenu: [
           {
-            label: 'Learn More',
-            click: () => {
-              shell.openExternal('https://github.com/yizhi996/wow-arcanite-toolbox')
-            }
+            label: 'Speech',
+            submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }]
           }
         ]
-      }
-    ]
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
-  } else {
-    Menu.setApplicationMenu(null)
-  }
-  if (isMacOS()) {
-    const template: Electron.MenuItemConstructorOptions[] = [
-      {
-        label: app.getName(),
-        submenu: [
-          { role: 'about' },
-          { type: 'separator' },
-          { role: 'services' },
-          { type: 'separator' },
-          { role: 'hide' },
-          { role: 'hideOthers' },
-          { role: 'unhide' },
-          { type: 'separator' },
-          { role: 'quit' }
-        ]
-      },
-      {
-        label: 'File',
-        submenu: [{ role: 'close' }]
       },
       {
         label: 'View',
