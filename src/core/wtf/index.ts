@@ -80,7 +80,7 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
     return []
   }
 
-  const accounts = (await fs_readdir(root)).filter(account => /^[a-zA-Z0-9#]+$/.test(account))
+  const accounts = (await fs_readdir(root))
   const result: WTF[] = []
 
   for await (const account of accounts) {
