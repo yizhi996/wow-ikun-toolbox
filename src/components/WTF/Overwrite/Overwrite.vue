@@ -1,44 +1,39 @@
 <template>
   <div class="w-full flex flex-col items-center">
-    <div class="w-full flex items-center justify-between px-5 py-2 bg-brown-900">
-      <div class="flex items-center">
-        <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
+    <div class="w-full flex items-center px-5 py-2 bg-brown-900">
+      <ElCheckbox v-model="store.onlyShowLoggedCharacters">只显示登录过的角色</ElCheckbox>
 
-        <ElDropdown class="ml-10" placement="bottom" :hide-on-click="false">
-          <AppButton type="primary" :icon="Setting"> 覆盖设置 </AppButton>
-          <template #dropdown>
-            <ElDropdownMenu>
-              <ElDropdownItem>
-                <ElCheckbox v-model="store.overwriteWTFConfig.accountAddon"
-                  >账号插件配置</ElCheckbox
-                >
-              </ElDropdownItem>
-              <ElDropdownItem
-                ><ElCheckbox v-model="store.overwriteWTFConfig.accountSystem"
-                  >账号系统设置</ElCheckbox
-                ></ElDropdownItem
-              >
-              <ElDropdownItem divided>
-                <ElCheckbox v-model="store.overwriteWTFConfig.playerAddon">角色插件配置</ElCheckbox>
-              </ElDropdownItem>
-              <ElDropdownItem>
-                <ElCheckbox v-model="store.overwriteWTFConfig.playerSystem"
-                  >角色系统设置</ElCheckbox
-                >
-              </ElDropdownItem>
-              <ElDropdownItem>
-                <ElCheckbox v-model="store.overwriteWTFConfig.chat">聊天窗口设置</ElCheckbox>
-              </ElDropdownItem>
-            </ElDropdownMenu>
-          </template>
-        </ElDropdown>
+      <ElDropdown class="ml-10" placement="bottom" :hide-on-click="false">
+        <AppButton type="primary" :icon="Setting"> 覆盖设置 </AppButton>
+        <template #dropdown>
+          <ElDropdownMenu>
+            <ElDropdownItem>
+              <ElCheckbox v-model="store.overwriteWTFConfig.accountAddon">账号插件配置</ElCheckbox>
+            </ElDropdownItem>
+            <ElDropdownItem
+              ><ElCheckbox v-model="store.overwriteWTFConfig.accountSystem"
+                >账号系统设置</ElCheckbox
+              ></ElDropdownItem
+            >
+            <ElDropdownItem divided>
+              <ElCheckbox v-model="store.overwriteWTFConfig.playerAddon">角色插件配置</ElCheckbox>
+            </ElDropdownItem>
+            <ElDropdownItem>
+              <ElCheckbox v-model="store.overwriteWTFConfig.playerSystem">角色系统设置</ElCheckbox>
+            </ElDropdownItem>
+            <ElDropdownItem>
+              <ElCheckbox v-model="store.overwriteWTFConfig.chat">聊天窗口设置</ElCheckbox>
+            </ElDropdownItem>
+          </ElDropdownMenu>
+        </template>
+      </ElDropdown>
 
-        <AppButton class="ml-5" type="success" :icon="RefreshRight" @click="bus.emit()"
-          >刷新</AppButton
-        >
-      </div>
+      <AppButton class="ml-5" type="success" :icon="RefreshRight" @click="bus.emit()"
+        >刷新</AppButton
+      >
 
       <AppButton
+        class="ml-5"
         type="danger"
         :icon="DArrowRight"
         :disabled="!source || !target"
@@ -54,7 +49,8 @@
           v-model:select="source"
           title="来源角色："
           :flavors="flavors"
-        ></WTFForm>
+        >
+        </WTFForm>
 
         <DArrowRight class="w-3"></DArrowRight>
 
@@ -64,6 +60,13 @@
           v-model:select="target"
           title="目标角色："
           :flavors="flavors"
+          :sort="
+            characters => {
+              return characters.sort((a, b) => {
+                return b.editDate - a.editDate
+              })
+            }
+          "
         ></WTFForm>
       </div>
     </div>
@@ -79,9 +82,8 @@ import AppButton from '~/components/AppButton.vue'
 import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { useEventBus } from '@vueuse/core'
 import WTFForm from './WTFForm.vue'
-import { DArrowRight, RefreshRight, Setting } from '@element-plus/icons-vue'
+import { DArrowRight, RefreshRight, Setting, Star } from '@element-plus/icons-vue'
 import { checkWoWExists } from '~/utils/path'
-
 const store = useStore()
 
 const bus = useEventBus<string>('WOW_DIR_CHANGED')

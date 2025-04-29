@@ -32,7 +32,10 @@
     >
       <ElTableColumn property="name" label="角色">
         <template #default="scope">
-          <span :style="{ color: scope.row.classColor }">{{ scope.row.name }}</span>
+          <span class="flex items-center">
+            <slot name="left"></slot>
+            <span :style="{ color: scope.row.classColor }">{{ scope.row.name }}</span>
+          </span>
         </template>
       </ElTableColumn>
       <ElTableColumn property="realm" label="服务器" />
@@ -55,6 +58,7 @@ const props = defineProps<{
   select: WTF | undefined
   flavor: Flavor | string
   flavors: SelectOption[]
+  sort?: (values: WTF[]) => WTF[]
 }>()
 
 const emit = defineEmits<{
@@ -98,13 +102,13 @@ const onSelectChange = (val: WTF | undefined) => {
 const onFlavorChange = async (val: string) => {
   emit('update:flavor', val)
   const res = await loadWTFCharacters(val)
-  characters.value = res
+  characters.value = props.sort ? props.sort(res) : res
 }
 
 const loadCharacters = async () => {
   if (props.flavor) {
     const res = await loadWTFCharacters(props.flavor)
-    characters.value = res
+    characters.value = props.sort ? props.sort(res) : res
   } else {
     characters.value = []
   }

@@ -34,7 +34,7 @@
                     : saved.SavedAccountNames
                 }}
               </div>
-              <div class="text-sm line-clamp-1">备注：{{ saved.remark }}</div>
+              <div class="text-sm line-clamp-1">备注：<span class="text-rose-500">{{ saved.remark }}</span></div>
               <div class="flex justify-between mt-2">
                 <div class="flex">
                   <AppButton type="success" size="small" @click="onLogin(saved)">登录</AppButton>

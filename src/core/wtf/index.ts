@@ -20,6 +20,7 @@ export interface WTF {
   flavor: Flavor | string
   classColor: string
   logged: boolean
+  editDate: number
 }
 
 export const enum Flavor {
@@ -80,7 +81,7 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
     return []
   }
 
-  const accounts = (await fs_readdir(root))
+  const accounts = await fs_readdir(root)
   const result: WTF[] = []
 
   for await (const account of accounts) {
@@ -123,7 +124,8 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
                 realm,
                 flavor,
                 classColor: classColorFromIndex(classIndex),
-                logged: !classIndex ? existsSync(savedPath) : true
+                logged: !classIndex ? existsSync(savedPath) : true,
+                editDate: s.mtime.getTime()
               })
             }
           }
@@ -131,6 +133,7 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
       }
     }
   }
+
   return result
 }
 
