@@ -103,7 +103,7 @@ import AppButton from '~/components/AppButton.vue'
 import { Plus, RefreshRight, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { join, extname } from 'node:path'
-import { writeFile, readdir, mkdir, readFile } from 'node:fs/promises'
+import { writeFile, readdir, mkdir, readFile, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { IPCChannel } from '~shared'
 import { classChineseNameToIndex, classColorFromIndex } from '~/core/wtf/classes'
@@ -257,7 +257,7 @@ const onReadMyslots = async () => {
     await mkdir(MYSLOT_DIR)
   }
   const files = (await readdir(MYSLOT_DIR)).filter(file => extname(file) === '.txt')
-  const res: Myslot[] = []
+  const res: (Myslot & { birthtime: number })[] = []
   for (const file of files) {
     const info = file.split('_')
     if (info.length < 4) {
@@ -269,9 +269,11 @@ const onReadMyslots = async () => {
       classColor: classColorFromIndex(classChineseNameToIndex(info[1])),
       talent: info[2],
       date: dayjs(parseInt(info[3].substring(0, 10)) * 1000).format('YYYY-MM-DD HH:mm:ss'),
-      filename: file
+      filename: file,
+      birthtime: (await stat(join(MYSLOT_DIR, file))).birthtimeMs
     })
   }
+  res.sort((a, b) => b.birthtime - a.birthtime)
   myslots.value = res
 }
 </script>
