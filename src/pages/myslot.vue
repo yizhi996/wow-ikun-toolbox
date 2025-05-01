@@ -38,11 +38,13 @@
       <div>
         <ElTable
           :border="true"
-          style="height: calc(100% - 25px)"
+          style="height: calc(100% - 55px)"
           :data="filterMyslots"
           highlight-current-row
           @current-change="onSelectMyslot"
+          @selection-change="onSelectionChange"
         >
+          <ElTableColumn type="selection" width="55" />
           <ElTableColumn property="name" label="角色" width="140">
             <template #default="scope">
               <span class="flex items-center">
@@ -53,9 +55,16 @@
           <ElTableColumn property="talent" label="天赋" width="80" />
           <ElTableColumn property="date" label="日期" width="200" />
         </ElTable>
+        <AppButton
+          class="mt-5"
+          type="danger"
+          :disabled="multipleSelection.length === 0"
+          @click="onDelete"
+          >删除</AppButton
+        >
       </div>
 
-      <div class="w-full h-full ml-5" v-if="selectedMyslot">
+      <div class="w-full ml-5" v-if="selectedMyslot">
         <ElInput
           v-model="selectedMyslot.content"
           type="textarea"
@@ -97,13 +106,13 @@
 import { useStore } from '~/store'
 import { ipcRenderer } from 'electron'
 import { showErrorMessage, showSuccessMessage } from '~/utils/message'
-import { ElDialog, ElInput } from 'element-plus'
+import { ElDialog, ElInput, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import AppButton from '~/components/AppButton.vue'
 import { Plus, RefreshRight, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { join, extname } from 'node:path'
-import { writeFile, readdir, mkdir, readFile, stat } from 'node:fs/promises'
+import { writeFile, readdir, mkdir, readFile, stat, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { IPCChannel } from '~shared'
 import { classChineseNameToIndex, classColorFromIndex } from '~/core/wtf/classes'
@@ -275,5 +284,30 @@ const onReadMyslots = async () => {
   }
   res.sort((a, b) => b.birthtime - a.birthtime)
   myslots.value = res
+}
+
+const multipleSelection = ref<Myslot[]>([])
+
+const onSelectionChange = (val: Myslot[]) => {
+  multipleSelection.value = val
+}
+
+const onDelete = async () => {
+  ElMessageBox.confirm(`确定删除 ${multipleSelection.value.length} 个 Myslot 吗?`, '操作确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      for await (const myslot of multipleSelection.value) {
+        const path = join(MYSLOT_DIR, myslot.filename)
+        if (existsSync(path)) {
+          await rm(path)
+        }
+      }
+      showSuccessMessage('删除成功')
+      onReadMyslots()
+    })
+    .catch(() => {})
 }
 </script>
