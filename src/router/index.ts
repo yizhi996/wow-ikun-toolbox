@@ -3,12 +3,14 @@ import { App } from 'vue'
 
 import WTF from '~/pages/wtf.vue'
 import Account from '~/pages/account.vue'
+import Myslot from '~/pages/myslot.vue'
 import Settings from '~/pages/settings.vue'
 
 import {
   Setting as ElIconSetting,
   Switch as ElIconSwitch,
-  Files as ElIconFiles
+  Files as ElIconFiles,
+  Document as ElIconDocument
 } from '@element-plus/icons-vue'
 
 const router = createRouter({
@@ -22,6 +24,7 @@ const router = createRouter({
       meta: { keepAlive: true, icon: 'ElIconFiles' }
     },
     { path: '/account', name: '账号切换', component: Account, meta: { icon: 'ElIconSwitch' } },
+    { path: '/myslot', name: 'Myslot', component: Myslot, meta: { icon: 'ElIconDocument' } },
     {
       path: '/settings',
       name: '设置',
@@ -38,6 +41,7 @@ router.install = (app: App) => {
   app.component('ElIconFiles', ElIconFiles)
   app.component('ElIconSetting', ElIconSetting)
   app.component('ElIconSwitch', ElIconSwitch)
+  app.component('ElIconDocument', ElIconDocument)
 }
 
 export default router

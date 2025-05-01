@@ -1,4 +1,4 @@
-import { app, dialog, ipcMain } from 'electron'
+import { app, dialog, ipcMain, shell } from 'electron'
 import { IPCChannel, isMacOS } from '~shared'
 
 ipcMain.handle(IPCChannel.CHOOSE_WOW_DIR, async event => {
@@ -36,6 +36,10 @@ ipcMain.on(IPCChannel.OPEN_DEV_TOOLS, event => {
   event.sender.openDevTools()
 })
 
-ipcMain.on(IPCChannel.RELOAD_APP, async event => {
+ipcMain.on(IPCChannel.RELOAD_APP, event => {
   event.sender.reload()
+})
+
+ipcMain.handle(IPCChannel.SHOW_IN_FOLDER, (event, path) => {
+  shell.showItemInFolder(path)
 })

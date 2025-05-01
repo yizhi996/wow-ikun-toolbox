@@ -35,6 +35,23 @@ const WOW_CLASSES_NAME_INDEX: Record<string, number> = {
   EVOKER: 13
 }
 
+const WOW_CLASSES_NAME_CHINESE_INDEX: Record<string, number> = {
+  '': 0,
+  战士: 1,
+  圣骑士: 2,
+  猎人: 3,
+  潜行者: 4,
+  牧师: 5,
+  死亡骑士: 6,
+  萨满祭司: 7,
+  法师: 8,
+  术士: 9,
+  武僧: 10,
+  德鲁伊: 11,
+  恶魔猎手: 12,
+  唤魔师: 13
+}
+
 const WOW_CLASSES_COLORS = [
   'var(--el-table-text-color)',
   '#C69B6D',
@@ -58,6 +75,10 @@ export const classNameToIndex = (className: string) => {
 
 export const classColorFromIndex = (index: number) => {
   return WOW_CLASSES_COLORS[index] || WOW_CLASSES_COLORS[0]
+}
+
+export const classChineseNameToIndex = (className: string) => {
+  return WOW_CLASSES_NAME_CHINESE_INDEX[className] || 0
 }
 
 export const getClassCharacterMapFromElvUI = async (dir: string) => {

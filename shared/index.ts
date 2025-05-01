@@ -11,6 +11,8 @@ export const enum IPCChannel {
   CHOOSE_WOW_DIR = 'CHOOSE_WOW_DIR',
   CHOOSE_BATTLENET_DIR = 'CHOOSE_BATTLENET_DIR',
 
+  SHOW_IN_FOLDER = 'SHOW_IN_FOLDER',
+
 }
 
 export const isMacOS = () => process.platform === 'darwin'
