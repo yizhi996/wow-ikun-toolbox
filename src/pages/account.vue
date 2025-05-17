@@ -34,7 +34,9 @@
                     : saved.SavedAccountNames
                 }}
               </div>
-              <div class="text-sm line-clamp-1">备注：<span class="text-rose-500">{{ saved.remark }}</span></div>
+              <div class="text-sm line-clamp-1">
+                备注：<span class="text-rose-500">{{ saved.remark }}</span>
+              </div>
               <div class="flex justify-between mt-2">
                 <div class="flex">
                   <AppButton type="success" size="small" @click="onLogin(saved)">登录</AppButton>
@@ -191,10 +193,40 @@ const onOpenBattleNet = async () => {
     showErrorMessage('请先设置战网路径')
     return
   }
-  executeWhenBattleNetNotRunning(async () => {
-    await clearBattleNetSavedAccount()
-    await shell.openPath(store.battleNetDir)
-  })
+
+  const exec = () => {
+    executeWhenBattleNetNotRunning(async () => {
+      await clearBattleNetSavedAccount()
+      await shell.openPath(store.battleNetDir)
+    })
+  }
+
+  const saved = await loadBattleNetSaved()
+  if (saved.SavedAccountNames) {
+    const i = store.savedAccounts.findIndex(e => e.SavedAccountNames === saved.SavedAccountNames)
+    if (i === -1) {
+      ElMessageBox.confirm(`${saved.SavedAccountNames} 还未保存，是否保存`, '操作确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          store.savedAccounts.unshift({
+            SavedAccountNames: saved.SavedAccountNames,
+            LastLoginAddress: saved.LastLoginAddress,
+            LastLoginRegion: saved.LastLoginRegion,
+            LastLoginTassadar: saved.LastLoginTassadar,
+            remark: ''
+          })
+          exec()
+        })
+        .catch(() => {})
+    } else {
+      exec()
+    }
+  } else {
+    exec()
+  }
 }
 
 const onLogin = async (saved: BattleNetSaved) => {
