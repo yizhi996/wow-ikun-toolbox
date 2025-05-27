@@ -1,4 +1,5 @@
 import luaparse from 'luaparse'
+import { isArray } from '.'
 
 type ASTNode =
   | luaparse.TableConstructorExpression
@@ -33,7 +34,7 @@ const astToObject = (ast: ASTNode): any => {
         if (key !== undefined) {
           result[key] = value
         } else {
-          if (!Array.isArray(result)) {
+          if (!isArray(result)) {
             result = []
           }
           result.push(value)

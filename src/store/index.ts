@@ -26,9 +26,12 @@ export const useStore = defineStore('main', () => {
     chat: true
   })
   const selectedSynchronizeFlavor = useAppStorage('selectSynchronizeFlavor', '')
+  const favoriteCharacters = useAppStorage('favoriteCharacters', [])
 
   const savedAccounts = useAppStorage<BattleNetSaved[]>('savedAccounts', [])
   const secureAccount = useAppStorage('secureAccount', false)
+
+  const WTF_LIST_LIMIT = 100
 
   return {
     appInfo,
@@ -40,6 +43,8 @@ export const useStore = defineStore('main', () => {
     overwriteWTFConfig,
     selectedSynchronizeFlavor,
     savedAccounts,
-    secureAccount
+    secureAccount,
+    favoriteCharacters,
+    WTF_LIST_LIMIT
   }
 })

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { readFile } from 'node:fs/promises'
 import { parseLua } from '~/utils/lua'
+import { isArray } from '~/utils'
 
 // None = 0
 // Warrior = 1
@@ -110,9 +111,9 @@ export const getClassCharacterMapFromNDui = async (dir: string) => {
 const transformNDuiObject = (obj: any): any => {
   const transformed: any = {}
   for (const key in obj) {
-    if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+    if (typeof obj[key] === 'object' && !isArray(obj[key])) {
       transformed[key] = transformNDuiObject(obj[key])
-    } else if (Array.isArray(obj[key])) {
+    } else if (isArray(obj[key])) {
       transformed[key] = obj[key][obj[key].length - 1]
     } else {
       transformed[key] = obj[key]

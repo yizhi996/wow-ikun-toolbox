@@ -1,6 +1,3 @@
-import { join } from 'node:path'
-import { readdir, stat } from 'node:fs/promises'
-import os from 'node:os'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
@@ -16,21 +13,6 @@ export interface SelectOption {
 
 export const toFixed = (n: number, fractionDigits: number = 1) => {
   return Number.isInteger(n) ? n : parseFloat(n.toFixed(fractionDigits))
-}
-
-export const toSize = (n?: number) => {
-  if (!n || isNaN(n)) {
-    return `0KB`
-  }
-  let limit = 1024 * 1024 * 1024
-  if (n > limit) {
-    return toFixed(n / limit, 2) + 'GB'
-  }
-  limit = 1024 * 1024
-  if (n > limit) {
-    return toFixed(n / limit, 2) + 'MB'
-  }
-  return toFixed(n / 1024, 2) + 'KB'
 }
 
 export const isString = (val: unknown): val is string => typeof val === 'string'
