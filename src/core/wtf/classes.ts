@@ -131,5 +131,5 @@ export const getClassIndexFromYishier = async (dir: string) => {
       return parseInt(match[1])
     }
   }
-  return 0
+  return -1
 }

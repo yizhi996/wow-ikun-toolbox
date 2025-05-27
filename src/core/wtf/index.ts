@@ -70,8 +70,9 @@ export const flavorToSelector = (flavor: Flavor) => {
   return { label, value: flavor }
 }
 
+const classesCache: Map<string, number> = new Map()
+
 export const loadWTFCharacters = async (flavor: Flavor | string) => {
-  const store = useStore()
   if (!checkWoWExists()) {
     return []
   }
@@ -88,7 +89,7 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
     const dir = resolve(root, account)
     const s = await stat(dir)
     if (s.isDirectory()) {
-      let classesMap: Record<string, Record<string, string>> | undefined = undefined
+      let accountClassesMap: Record<string, Record<string, string>> | undefined = undefined
 
       const realms = await fs_readdir(dir)
       for await (const realm of realms) {
@@ -99,24 +100,39 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
           for await (const name of names) {
             const s = await stat(resolve(dir, realm, name))
             if (s.isDirectory() && name !== FILENAME_SAVED_VARIABLES) {
-              let classIndex = 0
               const savedPath = resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
-              classIndex = await getClassIndexFromYishier(savedPath)
 
-              if (!classIndex) {
-                if (!classesMap) {
-                  classesMap =
+              let classIndex = -1
+              const cacheKey = `${account}:${realm}:${name}:${s.mtime.getTime()}`
+
+              if (classesCache.has(cacheKey)) {
+                classIndex = classesCache.get(cacheKey)!
+              }
+
+              if (classIndex === -1) {
+                classIndex = await getClassIndexFromYishier(savedPath)
+              }
+
+              if (classIndex === -1) {
+                if (!accountClassesMap) {
+                  accountClassesMap =
                     (await getClassCharacterMapFromElvUI(dir)) ||
                     (await getClassCharacterMapFromNDui(dir))
-                  if (!classesMap) {
-                    classesMap = {}
+                  if (!accountClassesMap) {
+                    accountClassesMap = {}
                   }
                 }
 
-                if (classesMap[realm] && classesMap[realm][name]) {
-                  classIndex = classNameToIndex(classesMap[realm][name])
+                if (accountClassesMap[realm] && accountClassesMap[realm][name]) {
+                  classIndex = classNameToIndex(accountClassesMap[realm][name])
                 }
               }
+
+              if (classIndex === -1) {
+                classIndex = 0
+              }
+
+              classesCache.set(cacheKey, classIndex)
 
               result.push({
                 account,
@@ -133,7 +149,6 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
       }
     }
   }
-
   return result
 }
 
@@ -146,7 +161,7 @@ export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
 
   if (store.overwriteWTFConfig.accountAddon || store.overwriteWTFConfig.accountSystem) {
     if (sourceAccountPath !== targetAccountPath) {
-      const overwriteFiles = []
+      const overwriteFiles: string[] = []
       if (store.overwriteWTFConfig.accountSystem) {
         overwriteFiles.push('config-cache.wtf')
       }
@@ -183,7 +198,7 @@ export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
   const sourceCharacterPath = resolve(sourceAccountPath, socure.realm, socure.name)
   const targetCharacterPath = resolve(targetAccountPath, target.realm, target.name)
 
-  const overwriteFiles = []
+  const overwriteFiles: string[] = []
   if (store.overwriteWTFConfig.playerAddon) {
     overwriteFiles.push('AddOns.txt')
     overwriteFiles.push('layout-local.txt')
