@@ -54,7 +54,7 @@ import { useStore } from '~/store'
 import { useEventBus } from '@vueuse/core'
 
 const props = defineProps<{
-  title: string
+  title: string | undefined
   select: WTF | undefined
   flavor: Flavor | string
   flavors: SelectOption[]
@@ -82,6 +82,8 @@ const filterCharacters = computed(() => {
   if (searchCharacterName.value) {
     const lowerCaseName = searchCharacterName.value.toLowerCase()
     res = res.filter(character => character.name.toLowerCase().includes(lowerCaseName))
+  } else if (res.length > store.WTF_LIST_LIMIT) {
+    res = res.slice(0, store.WTF_LIST_LIMIT)
   }
   return res
 })

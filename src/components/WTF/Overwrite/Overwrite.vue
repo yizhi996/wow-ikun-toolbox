@@ -41,7 +41,7 @@
         >覆盖</AppButton
       >
     </div>
-    <div class="flex w-full h-[calc(100%-48px)] p-5">
+    <div class="flex flex-col w-full h-[calc(100%-58px)] p-5">
       <div class="flex w-full h-full items-center justify-center space-x-5">
         <!-- 来源 -->
         <WTFForm
@@ -68,6 +68,9 @@
             }
           "
         ></WTFForm>
+      </div>
+      <div class="text-center text-white opacity-70 text-sm">
+        未使用搜索的情况下只显示前 {{ store.WTF_LIST_LIMIT }} 个角色
       </div>
     </div>
   </div>
