@@ -5,7 +5,6 @@ export const quitProcess = (name: string) => {
   const cmd = isWin ? `taskkill /f /im ${name}.exe` : `pkill -9 ${name}`
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
-      console.log(1, error, 2, stdout, 3, stderr)
       if (error) {
         return reject(error)
       }
@@ -19,7 +18,7 @@ export const quitProcess = (name: string) => {
 
 export const checkProcessIsRunning = (name: string) => {
   const isWin = process.platform === 'win32'
-  const cmd = isWin ? `tasklist /fi "imagename eq ${name}" /fo csv` : `ps aux`
+  const cmd = isWin ? `tasklist /fi "imagename eq ${name}.exe" /fo csv` : `ps aux`
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
