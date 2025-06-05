@@ -152,9 +152,9 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
   return result
 }
 
-export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
+export const overwriteCharacterConfig = async (source: WTF, target: WTF) => {
   const store = useStore()
-  const sourceAccountPath = resolve(getAccountPath(socure.flavor), socure.account)
+  const sourceAccountPath = resolve(getAccountPath(source.flavor), source.account)
   const targetAccountPath = resolve(getAccountPath(target.flavor), target.account)
 
   const files: { source: string; target: string }[] = []
@@ -195,7 +195,7 @@ export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
     }
   }
 
-  const sourceCharacterPath = resolve(sourceAccountPath, socure.realm, socure.name)
+  const sourceCharacterPath = resolve(sourceAccountPath, source.realm, source.name)
   const targetCharacterPath = resolve(targetAccountPath, target.realm, target.name)
 
   const overwriteFiles: string[] = []
@@ -247,10 +247,12 @@ export const overwriteCharacterConfig = async (socure: WTF, target: WTF) => {
       const s = await stat(file.source)
       if (!s.isDirectory()) {
         let content = await readFile(file.source, { encoding: 'utf-8' })
-        content = content.replaceAll(socure.name, target.name)
-        content = content.replaceAll(socure.realm, target.realm)
+        content = content.replaceAll(source.name, target.name)
+        content = content.replaceAll(source.realm, target.realm)
         await writeFile(file.target, content, { encoding: 'utf-8' })
       }
     }
   }
+
+  target.classColor = source.classColor
 }
