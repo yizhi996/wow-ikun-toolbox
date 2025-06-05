@@ -72,84 +72,103 @@ export const flavorToSelector = (flavor: Flavor) => {
 
 const classesCache: Map<string, number> = new Map()
 
+const loadingCache: Map<string, Promise<WTF[]>> = new Map()
+
 export const loadWTFCharacters = async (flavor: Flavor | string) => {
-  if (!checkWoWExists()) {
-    return []
+  const existingPromise = loadingCache.get(flavor)
+  if (existingPromise) {
+    return existingPromise.then(result => structuredClone(result))
   }
 
-  const root = getAccountPath(flavor)
-  if (!existsSync(root)) {
-    return []
-  }
+  const promise = (async () => {
+    try {
+      if (!checkWoWExists()) {
+        return []
+      }
 
-  const accounts = await fs_readdir(root)
-  const result: WTF[] = []
+      const root = getAccountPath(flavor)
+      if (!existsSync(root)) {
+        return []
+      }
 
-  for await (const account of accounts) {
-    const dir = resolve(root, account)
-    const s = await stat(dir)
-    if (s.isDirectory()) {
-      let accountClassesMap: Record<string, Record<string, string>> | undefined = undefined
+      const accounts = await fs_readdir(root)
+      const result: WTF[] = []
 
-      const realms = await fs_readdir(dir)
-      for await (const realm of realms) {
-        const absolute = resolve(dir, realm)
-        const s = await stat(absolute)
-        if (s.isDirectory() && realm !== FILENAME_SAVED_VARIABLES) {
-          const names = await fs_readdir(absolute)
-          for await (const name of names) {
-            const s = await stat(resolve(dir, realm, name))
-            if (s.isDirectory() && name !== FILENAME_SAVED_VARIABLES) {
-              const savedPath = resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
+      for await (const account of accounts) {
+        const dir = resolve(root, account)
+        const s = await stat(dir)
+        if (s.isDirectory()) {
+          let accountClassesMap: Record<string, Record<string, string>> | undefined = undefined
 
-              let classIndex = -1
-              const cacheKey = `${account}:${realm}:${name}:${s.mtime.getTime()}`
+          const realms = await fs_readdir(dir)
+          for await (const realm of realms) {
+            const absolute = resolve(dir, realm)
+            const s = await stat(absolute)
+            if (s.isDirectory() && realm !== FILENAME_SAVED_VARIABLES) {
+              const names = await fs_readdir(absolute)
+              for await (const name of names) {
+                const s = await stat(resolve(dir, realm, name))
+                if (s.isDirectory() && name !== FILENAME_SAVED_VARIABLES) {
+                  const savedPath = resolve(dir, realm, name, FILENAME_SAVED_VARIABLES)
 
-              if (classesCache.has(cacheKey)) {
-                classIndex = classesCache.get(cacheKey)!
-              }
+                  let classIndex = -1
+                  const cacheKey = `${account}:${realm}:${name}:${s.mtime.getTime()}`
 
-              if (classIndex === -1) {
-                classIndex = await getClassIndexFromYishier(savedPath)
-              }
-
-              if (classIndex === -1) {
-                if (!accountClassesMap) {
-                  accountClassesMap =
-                    (await getClassCharacterMapFromElvUI(dir)) ||
-                    (await getClassCharacterMapFromNDui(dir))
-                  if (!accountClassesMap) {
-                    accountClassesMap = {}
+                  if (classesCache.has(cacheKey)) {
+                    classIndex = classesCache.get(cacheKey)!
                   }
-                }
 
-                if (accountClassesMap[realm] && accountClassesMap[realm][name]) {
-                  classIndex = classNameToIndex(accountClassesMap[realm][name])
+                  if (classIndex === -1) {
+                    classIndex = await getClassIndexFromYishier(savedPath)
+                  }
+
+                  if (classIndex === -1) {
+                    if (!accountClassesMap) {
+                      accountClassesMap =
+                        (await getClassCharacterMapFromElvUI(dir)) ||
+                        (await getClassCharacterMapFromNDui(dir))
+                      if (!accountClassesMap) {
+                        accountClassesMap = {}
+                      }
+                    }
+
+                    if (accountClassesMap[realm] && accountClassesMap[realm][name]) {
+                      classIndex = classNameToIndex(accountClassesMap[realm][name])
+                    }
+                  }
+
+                  if (classIndex === -1) {
+                    classIndex = 0
+                  }
+
+                  classesCache.set(cacheKey, classIndex)
+
+                  result.push({
+                    account,
+                    name,
+                    realm,
+                    flavor,
+                    classColor: classColorFromIndex(classIndex),
+                    logged: !classIndex ? existsSync(savedPath) : true,
+                    editDate: s.mtime.getTime()
+                  })
                 }
               }
-
-              if (classIndex === -1) {
-                classIndex = 0
-              }
-
-              classesCache.set(cacheKey, classIndex)
-
-              result.push({
-                account,
-                name,
-                realm,
-                flavor,
-                classColor: classColorFromIndex(classIndex),
-                logged: !classIndex ? existsSync(savedPath) : true,
-                editDate: s.mtime.getTime()
-              })
             }
           }
         }
       }
+      console.log('loadWTFCharacters', result)
+      return result
+    } catch (e) {
+      return []
+    } finally {
+      loadingCache.delete(flavor)
     }
-  }
-  return result
+  })()
+
+  loadingCache.set(flavor, promise)
+  return promise
 }
 
 export const overwriteCharacterConfig = async (source: WTF, target: WTF) => {

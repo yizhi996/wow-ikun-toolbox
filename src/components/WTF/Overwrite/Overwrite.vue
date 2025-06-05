@@ -37,6 +37,7 @@
         type="danger"
         :icon="DArrowRight"
         :disabled="!source || !target"
+        :loading="overwriteing"
         @click="onOverwrite"
         >覆盖</AppButton
       >
@@ -85,7 +86,7 @@ import AppButton from '~/components/AppButton.vue'
 import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { useEventBus } from '@vueuse/core'
 import WTFForm from './WTFForm.vue'
-import { DArrowRight, RefreshRight, Setting, Star } from '@element-plus/icons-vue'
+import { DArrowRight, RefreshRight, Setting } from '@element-plus/icons-vue'
 import { checkWoWExists } from '~/utils/path'
 const store = useStore()
 
@@ -95,6 +96,8 @@ const source = ref<WTF>()
 const target = ref<WTF>()
 
 const flavors = ref<{ label: string; value: string }[]>([])
+
+const overwriteing = ref(false)
 
 onMounted(() => {
   if (checkWoWExists()) {
@@ -150,11 +153,13 @@ const onOverwrite = () => {
         return
       }
       try {
+        overwriteing.value = true
         await overwriteCharacterConfig(source.value!, target.value!)
         showSuccessMessage('覆盖成功')
       } catch (e) {
         showErrorMessage('覆盖失败')
       }
+      overwriteing.value = false
     })
     .catch(() => {})
 }
