@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { ipcRenderer } from 'electron'
 import { useStore } from '~/store'
-import { showErrorMessage, showSuccessMessage, showWarningMessage } from '~/utils/message'
+import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { resolve, basename } from 'node:path'
 import AppButton from '~/components/AppButton.vue'
 import { loadFlavors } from '~/core/wtf'
@@ -66,6 +66,7 @@ const chooseWoWRootDir = async () => {
       }
     }
     store.wowRootDir = dir
+    showSuccessMessage('设置成功')
     bus.emit(dir)
   }
 }
@@ -78,6 +79,7 @@ const chooseBattleNetDir = async () => {
       return
     }
     store.battleNetDir = dir
+    showSuccessMessage('设置成功')
   }
 }
 </script>
