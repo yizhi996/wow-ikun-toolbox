@@ -1,6 +1,6 @@
 {
-  "name": "wow-arcanite-toolbox",
-  "version": "0.1.0",
+  "name": "wow-ikun-toolbox",
+  "version": "1.0.0",
   "main": "dist-electron/main/index.js",
   "description": "",
   "author": "yizhi996",

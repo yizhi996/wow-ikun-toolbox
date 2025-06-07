@@ -1,4 +1,3 @@
-import { exec } from 'node:child_process'
 import { PathLike } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { isMacOS } from '~shared'

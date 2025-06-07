@@ -70,7 +70,7 @@ export const setMenu = () => {
           {
             label: 'Learn More',
             click: () => {
-              shell.openExternal('https://github.com/yizhi996/wow-arcanite-toolbox')
+              shell.openExternal('https://github.com/yizhi996/wow-ikun-toolbox')
             }
           }
         ]

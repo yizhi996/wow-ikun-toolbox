@@ -158,7 +158,6 @@ export const loadWTFCharacters = async (flavor: Flavor | string) => {
           }
         }
       }
-      console.log('loadWTFCharacters', result)
       return result
     } catch (e) {
       return []

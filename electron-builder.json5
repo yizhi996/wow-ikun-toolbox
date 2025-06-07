@@ -12,10 +12,10 @@
   mac: {
     target: [{ target: 'dmg', arch: 'universal' }],
     artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
-    executableName: '魔兽世界奥金工具箱'
+    executableName: '魔兽世界 iKun 工具箱'
   },
   dmg: {
-    title: '魔兽世界奥金工具箱'
+    title: '魔兽世界 iKun 工具箱'
   },
   win: {
     target: [
@@ -32,6 +32,6 @@
     perMachine: false,
     allowToChangeInstallationDirectory: true,
     deleteAppDataOnUninstall: false,
-    shortcutName: '魔兽世界奥金工具箱'
+    shortcutName: '魔兽世界 iKun 工具箱'
   }
 }

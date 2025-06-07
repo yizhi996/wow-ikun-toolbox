@@ -22,6 +22,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 //
 process.env.APP_ROOT = path.join(__dirname, '../..')
 
+app.setName('魔兽世界 iKun 工具箱')
+app.commandLine.appendSwitch('lang', 'zh-CN')
+
 export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 export const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
@@ -41,9 +44,6 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-app.setName('魔兽世界奥金工具箱')
-app.commandLine.appendSwitch('lang', 'zh-CN')
-
 let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
@@ -58,6 +58,7 @@ async function createWindow() {
     height: config.bounds.height,
     minWidth: 1024,
     minHeight: 768,
+    resizable: false,
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production

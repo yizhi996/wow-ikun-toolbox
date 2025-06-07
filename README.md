@@ -1,4 +1,4 @@
-# WoW Arcanite Toolbox / 魔兽世界奥金工具箱
+# WoW iKun Toolbox / 魔兽世界 iKun 工具箱
 
 ## 功能
 

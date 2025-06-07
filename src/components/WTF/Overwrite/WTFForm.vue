@@ -20,7 +20,7 @@
         </ElOption>
       </ElSelect>
 
-      <ElInput v-model="searchCharacterName" placeholder="搜索角色名" :prefix-icon="Search" />
+      <ElInput v-model.trim="searchCharacterName" placeholder="搜索角色名" :prefix-icon="Search" />
     </div>
 
     <ElTable

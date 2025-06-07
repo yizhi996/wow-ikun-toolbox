@@ -4,23 +4,9 @@ import { readFile } from 'node:fs/promises'
 import { parseLua } from '~/utils/lua'
 import { isArray } from '~/utils'
 
-// None = 0
-// Warrior = 1
-// Paladin = 2
-// Hunter = 3
-// Rogue = 4
-// Priest = 5
-// DeathKnight = 6
-// Shaman = 7
-// Mage = 8
-// Warlock = 9
-// Monk = 10
-// Druid = 11
-// Demon Hunter = 12
-// Evoker = 13
-
 const WOW_CLASSES_NAME_INDEX: Record<string, number> = {
   '': 0,
+
   WARRIOR: 1,
   PALADIN: 2,
   HUNTER: 3,
@@ -33,11 +19,8 @@ const WOW_CLASSES_NAME_INDEX: Record<string, number> = {
   MONK: 10,
   DRUID: 11,
   DEMONHUNTER: 12,
-  EVOKER: 13
-}
+  EVOKER: 13,
 
-const WOW_CLASSES_NAME_CHINESE_INDEX: Record<string, number> = {
-  '': 0,
   战士: 1,
   圣骑士: 2,
   猎人: 3,
@@ -76,10 +59,6 @@ export const classNameToIndex = (className: string) => {
 
 export const classColorFromIndex = (index: number) => {
   return WOW_CLASSES_COLORS[index] || WOW_CLASSES_COLORS[0]
-}
-
-export const classChineseNameToIndex = (className: string) => {
-  return WOW_CLASSES_NAME_CHINESE_INDEX[className] || 0
 }
 
 export const getClassCharacterMapFromElvUI = async (dir: string) => {
@@ -123,9 +102,9 @@ const transformNDuiObject = (obj: any): any => {
 }
 
 export const getClassIndexFromYishier = async (dir: string) => {
-  const lua = resolve(dir, 'Yishier.lua')
-  if (existsSync(lua)) {
-    const content = await readFile(lua, { encoding: 'utf-8' })
+  const luaPath = resolve(dir, 'Yishier.lua')
+  if (existsSync(luaPath)) {
+    const content = await readFile(luaPath, { encoding: 'utf-8' })
     const match = content.match(/YishierCharacterDB = (\d+)/)
     if (match) {
       return parseInt(match[1])
