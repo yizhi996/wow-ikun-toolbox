@@ -8,6 +8,13 @@
             <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
               >保持当前账号</AppButton
             >
+            <!-- <AppButton size="large" type="danger" @click="onShowSaveAccountDialog"
+              >手动输入</AppButton
+            > -->
+
+            <AppButton size="large" type="danger" @click="onShowBattleNetLoginButton"
+              >显示战网登陆（测试）</AppButton
+            >
           </div>
           <ElInput
             v-model="search"
@@ -16,10 +23,11 @@
             placeholder="搜索账号或备注"
             :suffix-icon="Search"
           ></ElInput>
-          <ElCheckbox v-model="store.secureAccount" class="mt-5">匿名显示账号</ElCheckbox>
-
+          <div>
+            <ElCheckbox v-model="store.secureAccount" class="mt-3">匿名显示</ElCheckbox>
+          </div>
           <div
-            class="grid gap-3 overflow-y-auto max-h-[calc(100%-156px)]"
+            class="grid gap-3 overflow-y-auto max-h-[calc(100%-140px)] mt-1"
             style="grid-template-columns: repeat(auto-fill, 280px)"
           >
             <div
@@ -82,6 +90,7 @@ import {
   BATTLE_NET_APP_NAME,
   BattleNetSaved,
   clearBattleNetSavedAccount,
+  deleteBattleNetLoginBrowserCache,
   loadBattleNetSaved,
   secureString,
   writeBattleNetSaved
@@ -261,5 +270,21 @@ const onDelete = (saved: BattleNetSaved) => {
       }
     })
     .catch(() => {})
+}
+
+const onShowBattleNetLoginButton = async () => {
+  if (!checkBattleNetExists()) {
+    showErrorMessage('请先设置战网路径')
+    return
+  }
+
+  executeWhenBattleNetNotRunning(async () => {
+    try {
+      await deleteBattleNetLoginBrowserCache()
+      await onOpenBattleNet()
+    } catch (e) {
+      showErrorMessage('清理缓存失败')
+    }
+  })
 }
 </script>

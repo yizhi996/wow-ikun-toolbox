@@ -48,7 +48,12 @@ const astToObject = (ast: ASTNode): any => {
     case 'TableValue':
       return astToObject(ast.value)
     case 'StringLiteral':
-      return ast.raw.replace(/"/g, '')
+      let str = ast.raw
+      str = str.replace(/"/g, '')
+      str = str.replace(/\\n/g, '\n')
+      str = str.replace(/\\t/g, '\t')
+      str = str.replace(/\\r/g, '\r')
+      return str
     case 'NumericLiteral':
       return Number(ast.raw)
     case 'BooleanLiteral':
@@ -63,6 +68,10 @@ const astToObject = (ast: ASTNode): any => {
 }
 
 export const parseLua = (string: string) => {
-  const ast = luaparse.parse(string)
-  return astToObject(ast)
+  try {
+    const ast = luaparse.parse(string)
+    return astToObject(ast)
+  } catch {
+    return {}
+  }
 }

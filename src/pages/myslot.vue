@@ -15,6 +15,7 @@
             "
             >新增</AppButton
           >
+          <!-- <MyslotImport></MyslotImport> -->
           <AppButton
             class="ml-5"
             size="large"
@@ -34,11 +35,11 @@
       </div>
     </div>
 
-    <div class="w-full h-full flex mt-10">
+    <div class="flex mt-5">
       <div>
         <ElTable
           :border="true"
-          style="height: calc(100% - 55px)"
+          style="height: 535px"
           :data="filterMyslots"
           highlight-current-row
           @current-change="onSelectMyslot"
@@ -69,7 +70,7 @@
           v-model="selectedMyslot.content"
           type="textarea"
           resize="none"
-          :autosize="{ minRows: 24, maxRows: 24 }"
+          :autosize="{ minRows: 25, maxRows: 25 }"
           disabled
         ></ElInput>
 
@@ -109,13 +110,17 @@ import { showErrorMessage, showSuccessMessage } from '~/utils/message'
 import { ElDialog, ElInput, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import AppButton from '~/components/AppButton.vue'
-import { Plus, RefreshRight, Search } from '@element-plus/icons-vue'
+import { Download, Plus, RefreshRight, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { join, extname } from 'node:path'
-import { writeFile, readdir, mkdir, readFile, stat, rm } from 'node:fs/promises'
+import { writeFile, mkdir, readFile, stat, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { IPCChannel } from '~shared'
-import { classChineseNameToIndex, classColorFromIndex } from '~/core/wtf/classes'
+import { classNameToIndex, classColorFromIndex } from '~/core/wtf/classes'
+import { flavorToSelector, loadFlavors, WTF } from '~/core/wtf'
+import WTFForm from '~/components/WTF/Overwrite/WTFForm.vue'
+import { fs_readdir } from '~/utils/fs'
+import { loadWTFMyslots, parseMyslotText } from '~/core/myslot'
 
 interface Myslot {
   name: string
@@ -197,75 +202,40 @@ const onReadClipboard = async () => {
 }
 
 const onSave = async () => {
-  const ERR_INVALID = '不是正确的 Myslot 文本'
-  const KEY_MYSLOE = '# Myslot'
-  const KEY_MYSLOT_END = '# END OF MYSLOT'
-  const KEY_TIME = '# 时间: '
-  const KEY_NAME = '# 玩家: '
-  const KEY_CLASS = '# 职业: '
-  const KEY_TALENT = '# 专精: '
+  try {
+    const myslot = parseMyslotText(myslotText.value)
 
-  const lines = myslotText.value.split('\n')
-  if (!lines[0].startsWith(KEY_MYSLOE)) {
-    showErrorMessage(ERR_INVALID)
-    return
-  }
-  if (!lines[lines.length - 1].startsWith(KEY_MYSLOT_END)) {
-    showErrorMessage(ERR_INVALID)
-    return
-  }
-  let i = lines.findIndex(line => line.startsWith(KEY_TIME))
-  if (i === -1) {
-    showErrorMessage(ERR_INVALID)
-    return
-  }
-  const time = lines[i].substring(KEY_TIME.length)
+    try {
+      const baseFilename = `${myslot.name}_${myslot.classes}_${myslot.talent}_${myslot.createAt}`
+      let filename = baseFilename
+      let counter = 0
+      while (existsSync(join(MYSLOT_DIR, `${filename}.txt`))) {
+        filename = `${baseFilename}_${counter++}`
+      }
 
-  i = lines.findIndex(line => line.startsWith(KEY_NAME))
-  if (i === -1) {
-    showErrorMessage(ERR_INVALID)
-    return
-  }
-  const name = lines[i].substring(KEY_NAME.length)
+      await writeFile(join(MYSLOT_DIR, `${filename}.txt`), myslotText.value)
 
-  i = lines.findIndex(line => line.startsWith(KEY_CLASS))
-  if (i === -1) {
-    showErrorMessage(ERR_INVALID)
-    return
-  }
-  const classes = lines[i].substring(KEY_CLASS.length)
+      myslotDialogVisible.value = false
+      showSuccessMessage('保存成功')
 
-  i = lines.findIndex(line => line.startsWith(KEY_TALENT))
-  if (i === -1) {
-    showErrorMessage(ERR_INVALID)
-    return
+      onReadMyslots()
+    } catch {
+      showErrorMessage('保存失败')
+    }
+  } catch (e) {
+    showErrorMessage((e as Error).message)
   }
-  const talent = lines[i].substring(KEY_TALENT.length)
 
   if (!existsSync(MYSLOT_DIR)) {
     await mkdir(MYSLOT_DIR)
   }
-
-  const baseFilename = `${name}_${classes}_${talent}_${new Date(time).getTime() / 1000}`
-  let filename = baseFilename
-  let counter = 0
-  while (existsSync(join(MYSLOT_DIR, `${filename}.txt`))) {
-    filename = `${baseFilename}_${counter++}`
-  }
-
-  await writeFile(join(MYSLOT_DIR, `${filename}.txt`), myslotText.value)
-
-  myslotDialogVisible.value = false
-  showSuccessMessage('保存成功')
-
-  onReadMyslots()
 }
 
 const onReadMyslots = async () => {
   if (!existsSync(MYSLOT_DIR)) {
     await mkdir(MYSLOT_DIR)
   }
-  const files = (await readdir(MYSLOT_DIR)).filter(file => extname(file) === '.txt')
+  const files = (await fs_readdir(MYSLOT_DIR)).filter(file => extname(file) === '.txt')
   const res: (Myslot & { birthtime: number })[] = []
   for (const file of files) {
     const info = file.split('_')
@@ -275,7 +245,7 @@ const onReadMyslots = async () => {
     res.push({
       name: info[0],
       classes: info[1],
-      classColor: classColorFromIndex(classChineseNameToIndex(info[1])),
+      classColor: classColorFromIndex(classNameToIndex(info[1])),
       talent: info[2],
       date: dayjs(parseInt(info[3].substring(0, 10)) * 1000).format('YYYY-MM-DD HH:mm:ss'),
       filename: file,
