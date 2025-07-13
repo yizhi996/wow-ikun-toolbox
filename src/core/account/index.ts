@@ -1,6 +1,6 @@
 import { readFile, writeFile, rm } from 'node:fs/promises'
 import { useStore } from '~/store'
-import { join, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 
 export interface BattleNetSaved {
@@ -120,14 +120,7 @@ export function secureString(input: string): string {
 export const deleteBattleNetLoginBrowserCache = async () => {
   const store = useStore()
   const path = resolve(store.appInfo.paths.appData, BATTLE_NET_APP_NAME, 'BrowserCaches')
-
-  let fp = join(path, 'common')
-  if (existsSync(fp)) {
-    await rm(fp, { recursive: true })
-  }
-
-  fp = join(path, 'LocalPrefs.json')
-  if (existsSync(fp)) {
-    await rm(fp)
+  if (existsSync(path)) {
+    await rm(path, { recursive: true })
   }
 }
