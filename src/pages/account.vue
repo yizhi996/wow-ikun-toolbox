@@ -8,9 +8,22 @@
             <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
               >保持当前账号</AppButton
             >
-            <!-- <AppButton size="large" type="danger" @click="onShowSaveAccountDialog"
-              >手动输入</AppButton
-            > -->
+
+            <AppButton
+              size="large"
+              type="warning"
+              @click="
+                () => {
+                  try {
+                    showBattleNetLoginRegionsSwitchButton()
+                    showSuccessMessage('设置成功')
+                  } catch {
+                    showErrorMessage('设置失败')
+                  }
+                }
+              "
+              >显示地区切换</AppButton
+            >
 
             <AppButton size="large" type="danger" @click="onShowBattleNetLoginButton"
               >显示战网登陆（测试）</AppButton
@@ -93,9 +106,10 @@ import {
   deleteBattleNetLoginBrowserCache,
   loadBattleNetSaved,
   secureString,
+  showBattleNetLoginRegionsSwitchButton,
   writeBattleNetSaved
 } from '~/core/account'
-import { showErrorMessage, showWarningMessage } from '~/utils/message'
+import { showErrorMessage, showSuccessMessage, showWarningMessage } from '~/utils/message'
 import { ElDialog, ElForm, ElFormItem, ElInput, ElMessageBox } from 'element-plus'
 import { computed, reactive, ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'

@@ -130,3 +130,10 @@ export const deleteBattleNetLoginBrowserCache = async () => {
     await rm(path, { recursive: true })
   }
 }
+
+export const showBattleNetLoginRegionsSwitchButton = async () => {
+  let config = await loadBattleNetConfig()
+  config = updateObjectValue(config, 'AllowedRegions', '')
+  config = updateObjectValue(config, 'AllowedLocales', '')
+  return writeFile(getBattleNetConfigPath(), JSON.stringify(config, null, 4))
+}
