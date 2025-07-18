@@ -9,19 +9,7 @@
               >保持当前账号</AppButton
             >
 
-            <AppButton
-              size="large"
-              type="warning"
-              @click="
-                () => {
-                  try {
-                    showBattleNetLoginRegionsSwitchButton()
-                    showSuccessMessage('设置成功')
-                  } catch {
-                    showErrorMessage('设置失败')
-                  }
-                }
-              "
+            <AppButton size="large" type="warning" @click="onShowBattleNetLoginRegionsSwitchButton"
               >显示地区切换</AppButton
             >
 
@@ -104,9 +92,9 @@ import {
   BattleNetSaved,
   clearBattleNetSavedAccount,
   deleteBattleNetLoginBrowserCache,
+  emptyBattleNetLoginRegions,
   loadBattleNetSaved,
   secureString,
-  showBattleNetLoginRegionsSwitchButton,
   writeBattleNetSaved
 } from '~/core/account'
 import { showErrorMessage, showSuccessMessage, showWarningMessage } from '~/utils/message'
@@ -286,19 +274,42 @@ const onDelete = (saved: BattleNetSaved) => {
     .catch(() => {})
 }
 
-const onShowBattleNetLoginButton = async () => {
+const confirmQuitBattleNetThenExecute = async (fn: () => {}) => {
   if (!checkBattleNetExists()) {
     showErrorMessage('请先设置战网路径')
     return
   }
 
-  executeWhenBattleNetNotRunning(async () => {
-    try {
-      await deleteBattleNetLoginBrowserCache()
-      await onOpenBattleNet()
-    } catch (e) {
-      showErrorMessage('清理缓存失败')
-    }
-  })
+  const then = () => {
+    executeWhenBattleNetNotRunning(async () => {
+      try {
+        await fn()
+        showSuccessMessage('设置成功')
+      } catch {
+        showErrorMessage('设置失败')
+      }
+    })
+  }
+
+  const isRunning = await checkProcessIsRunning(BATTLE_NET_APP_NAME)
+  if (isRunning) {
+    ElMessageBox.confirm(`该操作需要先退出战网客户端`, '操作确认', {
+      confirmButtonText: '退出',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(then)
+      .catch(() => {})
+  } else {
+    then()
+  }
+}
+
+const onShowBattleNetLoginButton = async () => {
+  confirmQuitBattleNetThenExecute(deleteBattleNetLoginBrowserCache)
+}
+
+const onShowBattleNetLoginRegionsSwitchButton = async () => {
+  confirmQuitBattleNetThenExecute(emptyBattleNetLoginRegions)
 }
 </script>

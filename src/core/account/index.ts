@@ -131,7 +131,7 @@ export const deleteBattleNetLoginBrowserCache = async () => {
   }
 }
 
-export const showBattleNetLoginRegionsSwitchButton = async () => {
+export const emptyBattleNetLoginRegions = async () => {
   let config = await loadBattleNetConfig()
   config = updateObjectValue(config, 'AllowedRegions', '')
   config = updateObjectValue(config, 'AllowedLocales', '')
