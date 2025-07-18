@@ -2,6 +2,7 @@ import { readFile, writeFile, rm } from 'node:fs/promises'
 import { useStore } from '~/store'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
+import { isMacOS } from '~shared'
 
 export interface BattleNetSaved {
   remark: string | undefined
@@ -119,7 +120,12 @@ export function secureString(input: string): string {
 
 export const deleteBattleNetLoginBrowserCache = async () => {
   const store = useStore()
-  const path = resolve(store.appInfo.paths.appData, BATTLE_NET_APP_NAME, 'BrowserCaches')
+  let path = ''
+  if (isMacOS()) {
+    path = resolve(store.appInfo.paths.appData, BATTLE_NET_APP_NAME, 'BrowserCaches')
+  } else {
+    path = resolve(store.appInfo.paths.appData, '..', 'Local', BATTLE_NET_APP_NAME, 'BrowserCaches')
+  }
   if (existsSync(path)) {
     await rm(path, { recursive: true })
   }
