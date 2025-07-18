@@ -8,4 +8,6 @@
 
 ## 下载
 
+- [蓝奏云](https://wwbk.lanzouq.com/b0138zxefg)
+
 ## 更新日志
