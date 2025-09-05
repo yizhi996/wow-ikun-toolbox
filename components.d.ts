@@ -14,6 +14,7 @@ declare module 'vue' {
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    MyslotImport: typeof import('./src/components/Myslot/MyslotImport.vue')['default']
     Overwrite: typeof import('./src/components/WTF/Overwrite/Overwrite.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

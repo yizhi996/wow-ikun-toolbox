@@ -6,26 +6,29 @@
           <div class="flex items-center">
             <AppButton size="large" type="success" @click="onOpenBattleNet">登录新账号</AppButton>
             <AppButton size="large" type="primary" @click="onShowSaveAccountDialog"
-              >保持当前账号</AppButton
+              >保存当前账号</AppButton
             >
 
             <AppButton size="large" type="warning" @click="onShowBattleNetLoginRegionsSwitchButton"
               >显示地区切换</AppButton
             >
 
-            <AppButton size="large" type="danger" @click="onShowBattleNetLoginButton"
+            <!-- <AppButton size="large" type="danger" @click="onShowBattleNetLoginButton"
               >显示战网登陆（测试）</AppButton
-            >
+            > -->
           </div>
-          <ElInput
-            v-model="search"
-            class="mt-5"
-            style="width: 256px"
-            placeholder="搜索账号或备注"
-            :suffix-icon="Search"
-          ></ElInput>
-          <div>
-            <ElCheckbox v-model="store.secureAccount" class="mt-3">匿名显示</ElCheckbox>
+          <div class="flex items-center">
+            <ElInput
+              v-model="search"
+              class="mt-5"
+              style="width: 256px"
+              placeholder="搜索账号或备注"
+              :suffix-icon="Search"
+            ></ElInput>
+          </div>
+          <div class="flex items-center mt-3">
+            <ElCheckbox v-model="store.secureAccount">匿名显示</ElCheckbox>
+            <div class="text-sm text-white opacity-70 mx-10">网易账号保存时显示的是老的战网帐号，照样可以登录</div>
           </div>
           <div
             class="grid gap-3 overflow-y-auto max-h-[calc(100%-140px)] mt-1"
